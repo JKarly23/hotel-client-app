@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import './App.css'
 import PublicRouter from './routers/PublicRouter';
+import AuthRouter from './routers/AuthRouter';
 
 function App() {
 
@@ -14,6 +15,7 @@ function App() {
       <Routers>
         <Routes>
           <Route path='/*' element={<PublicRouter />} />
+          <Route path='/auth/*' element={<AuthRouter />} />
         </Routes>
       </Routers>
     </>

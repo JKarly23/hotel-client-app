@@ -1,8 +1,8 @@
-import { AbstractService } from './abstractService';
+import { BasicService } from './BasicService';
 
-export class RoomService extends AbstractService{
-    constructor(){
-        super(),
-        this.secureUrl = '/api/rooms/'
-    }
+export class RoomService extends BasicService {
+  constructor() {
+    super();
+    this.secureUrl = '/rooms';
+  }
 }
