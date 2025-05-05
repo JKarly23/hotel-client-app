@@ -15,8 +15,16 @@ export const useForm = (initial = {}) => {
         ...value,
         [name]: eOrValue
       });
+    } else if (eOrValue.target.type === 'file') {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setValue({ ...form, img: reader.result });
+        };
+        reader.readAsDataURL(file);
+      }
     }
   }
   return [value, handleInputChange];
 }
-

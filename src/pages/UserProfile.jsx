@@ -1,24 +1,25 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 const UserProfile = () => {
   const { user } = useSelector((state) => state.auth);
 
   // Imagen de perfil por defecto
   const img = user?.img ? user.img : 'https://th.bing.com/th/id/R.6b0022312d41080436c52da571d5c697?rik=CWihwAiT6S2emg&pid=ImgRaw&r=0'
-
+  
   return (
     <div className="min-h-screen flex flex-col items-center justify-center from-indigo-100 via-purple-100 to-pink-100 p-4">
       <div className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl p-8 animate__animated animate__fadeIn flex flex-col items-center">
         {/* Botón editar */}
-        <button
+        <Link to="/profile/edit"
           className="absolute -top-7 left-1/2 -translate-x-1/2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-4 shadow-lg animate__animated animate__bounceIn"
           title="Editar perfil"
         >
           <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H7v-3a2 2 0 01.586-1.414z" />
           </svg>
-        </button>
+        </Link>
         {/* Avatar y nombre */}
         <div className="flex flex-col items-center mt-4">
           <div className="relative">

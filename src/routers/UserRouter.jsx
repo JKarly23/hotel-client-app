@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom'
 import UserProfile from '../pages/UserProfile';
 import { useSelector } from 'react-redux';
 import Navbar from '../components/ui/Navbar';
+import UserEdit from '../components/user/UserEdit';
 
 const UserRouter = () => {
     const { user } = useSelector((state) => state.auth);
@@ -14,7 +15,7 @@ const UserRouter = () => {
             <Navbar />
             <Routes>
                 <Route path='/' element={<UserProfile />} />
-                {/* <Route path='/edit' element={<UserEdit/>}/> */}
+                <Route path='/edit' element={<UserEdit/>}/>
             </Routes>
 
         </div>

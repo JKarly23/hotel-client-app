@@ -1,6 +1,6 @@
-import { AxiosInstance } from './AxiosInstance';
+import { BasicService } from './BasicService';
 
-export class AuthService extends AxiosInstance {
+export class AuthService extends BasicService {
   constructor() {
     super();
     this.secureUrl = '/auth';
@@ -20,4 +20,6 @@ export class AuthService extends AxiosInstance {
     const { data } = await this.axiosInstance.post(`${this.secureUrl}/logout`);
     return data;
   }
+
+
 }
