@@ -13,7 +13,7 @@ const Navbar = () => {
     ]
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
-    const { user } = useSelector((state) => state.auth);
+    const { user, isAuthenticated } = useSelector((state) => state.auth);
     console.log(user)
     // Imagen de perfil por defecto
     const img = user?.img ? user.img : 'https://th.bing.com/th/id/R.6b0022312d41080436c52da571d5c697?rik=CWihwAiT6S2emg&pid=ImgRaw&r=0'
@@ -49,7 +49,7 @@ const Navbar = () => {
                     ))}
                 </div>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                    {!user
+                    {!isAuthenticated
                         ? (
                             <Link to="/auth/login" className="text-sm/6 font-semibold text-gray-900">
                                 Iniciar sesión <span aria-hidden="true">&rarr;</span>
@@ -101,7 +101,7 @@ const Navbar = () => {
                                 ))}
                             </div>
                             <div className="py-6">
-                                {!user
+                                {!isAuthenticated
                                     ? (
                                         <Link to="/auth/login" className="text-sm/6 font-semibold text-gray-900">
                                             Iniciar sesión <span aria-hidden="true">&rarr;</span>
