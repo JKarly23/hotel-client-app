@@ -1,13 +1,21 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 
 export const useForm = (initial = {}) => {
   const [value, setValue] = useState(initial);
-  const handleInputChange = (e) => {
-    e.preventDefault();
-    setValue({
+  const handleInputChange = (eOrValue, name) => {
+    // Si es un evento de input normal
+    if (eOrValue && eOrValue.target) {
+      setValue({
         ...value,
-        [e.target.name]: e.target.value
-    })
+        [eOrValue.target.name]: eOrValue.target.value
+      });
+    } else if (name) {
+      // Si es un valor directo (como DatePicker)
+      setValue({
+        ...value,
+        [name]: eOrValue
+      });
+    }
   }
   return [value, handleInputChange];
 }

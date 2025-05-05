@@ -7,20 +7,25 @@ import RoomImageGallery from './RoomImageGallery'
 import RoomInfo from './RoomInfo'
 import RoomActions from './RoomActions'
 import { RoomService } from '../../services/RoomService'
+import { useDispatch } from 'react-redux'
+import { setRoom } from '../../feautere/room/roomSlice'
 
 const roomService = new RoomService()
 
 const RoomDetail = () => {
-  const [room, setRoom] = useState({})
+  const [room, setRoomState] = useState({})
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const { id } = useParams()
+
+  const dispatch = useDispatch();
 
   const getRoomById = async () => {
     try {
       const fetchRoom = await roomService.findById(id)
       if (!fetchRoom) throw new Error('Habitación no encontrada', { cause: 'not_found' })
-      setRoom(fetchRoom)
+      setRoomState(fetchRoom)
+      dispatch(setRoom(fetchRoom))
     } catch (err) {
       setError(handleApiError(err))
     } finally {

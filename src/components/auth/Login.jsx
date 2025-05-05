@@ -28,7 +28,7 @@ const Login = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const { errors } = useSelector((state) => state.errors)
-  const lastPath = localStorage.getItem('lastPath') || '/rooms'
+  const lastPath = localStorage.getItem('lastPath') || '/'
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -45,7 +45,7 @@ const Login = () => {
           localStorage.removeItem('lastPath');
         } catch (err) {
           if (['ERR_BAD_REQUEST', 'ERR_NOT_FOUND'].includes(err.code)) {
-            setError('Usuario no encontrado');
+            setError({ message: 'Usuario no encontrado' });
           } else {
             setError(handleApiError(err))
           }
@@ -106,7 +106,7 @@ const Login = () => {
                     </svg>
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm text-red-700 font-medium">{error}</p>
+                    <p className="text-sm text-red-700 font-medium">{error.message}</p>
                   </div>
                 </div>
               </div>

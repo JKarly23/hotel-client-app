@@ -1,27 +1,35 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Link } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
+import UserNav from './UserNav'
 
 const Navbar = () => {
     const navigation = [
-        { name: 'Product', href: '#' },
-        { name: 'Features', href: '#' },
-        { name: 'Marketplace', href: '#' },
-        { name: 'Company', href: '#' },
-      ]
-      const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+        { name: 'Inicio', href: '/' },
+        { name: 'Habitaciones', href: '/rooms' },
+        { name: 'Contacto', href: '/contact' },
+    ]
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+    const [dropdownOpen, setDropdownOpen] = useState(false)
+    const { user } = useSelector((state) => state.auth);
+    console.log(user)
+    // Imagen de perfil por defecto
+    const img = user?.img ? user.img : 'https://th.bing.com/th/id/R.6b0022312d41080436c52da571d5c697?rik=CWihwAiT6S2emg&pid=ImgRaw&r=0'
+
     return (
         <header className="absolute inset-x-0 top-0 z-50">
             <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
                 <div className="flex lg:flex-1">
-                    <a href="#" className="-m-1.5 p-1.5">
-                        <span className="sr-only">Your Company</span>
+                    <Link to="/" className="-m-1.5 p-1.5">
+                        <span className="sr-only">LuxerGTk</span>
                         <img
-                            alt=""
-                            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                            className="h-8 w-auto"
+                            alt="Logo"
+                            src="../../../public/hotel-icon-symbol-sign-vector.jpg"
+                            className="h-12 w-auto rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                         />
-                    </a>
+                    </Link>
                 </div>
                 <div className="flex lg:hidden">
                     <button
@@ -35,29 +43,40 @@ const Navbar = () => {
                 </div>
                 <div className="hidden lg:flex lg:gap-x-12">
                     {navigation.map((item) => (
-                        <a key={item.name} href={item.href} className="text-sm/6 font-semibold text-gray-900">
+                        <Link key={item.name} to={item.href} className="text-sm/6 font-semibold text-gray-900">
                             {item.name}
-                        </a>
+                        </Link>
                     ))}
                 </div>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                    <a href="#" className="text-sm/6 font-semibold text-gray-900">
-                        Log in <span aria-hidden="true">&rarr;</span>
-                    </a>
+                    {!user
+                        ? (
+                            <Link to="/auth/login" className="text-sm/6 font-semibold text-gray-900">
+                                Iniciar sesión <span aria-hidden="true">&rarr;</span>
+                            </Link>
+                        )
+                        : (
+                            <UserNav
+                                img={img}
+                                dropdownOpen={dropdownOpen}
+                                setDropdownOpen={setDropdownOpen}
+                                setMobileMenuOpen={setMobileMenuOpen}
+                            />
+                        )}
                 </div>
             </nav>
             <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
                 <div className="fixed inset-0 z-50" />
                 <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
                     <div className="flex items-center justify-between">
-                        <a href="#" className="-m-1.5 p-1.5">
-                            <span className="sr-only">Your Company</span>
+                        <Link to="/" className="-m-1.5 p-1.5">
+                            <span className="sr-only">LuxerGTk</span>
                             <img
-                                alt=""
+                                alt="Logo"
                                 src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
                                 className="h-8 w-auto"
                             />
-                        </a>
+                        </Link>
                         <button
                             type="button"
                             onClick={() => setMobileMenuOpen(false)}
@@ -71,29 +90,38 @@ const Navbar = () => {
                         <div className="-my-6 divide-y divide-gray-500/10">
                             <div className="space-y-2 py-6">
                                 {navigation.map((item) => (
-                                    <a
+                                    <Link
                                         key={item.name}
-                                        href={item.href}
+                                        to={item.href}
                                         className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                                        onClick={() => setMobileMenuOpen(false)}
                                     >
                                         {item.name}
-                                    </a>
+                                    </Link>
                                 ))}
                             </div>
                             <div className="py-6">
-                                <a
-                                    href="#"
-                                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                                >
-                                    Log in
-                                </a>
+                                {!user
+                                    ? (
+                                        <Link to="/auth/login" className="text-sm/6 font-semibold text-gray-900">
+                                            Iniciar sesión <span aria-hidden="true">&rarr;</span>
+                                        </Link>
+                                    )
+                                    : (
+                                        <UserNav
+                                            img={img}
+                                            dropdownOpen={dropdownOpen}
+                                            setDropdownOpen={setDropdownOpen}
+                                            setMobileMenuOpen={setMobileMenuOpen}
+                                        />
+                                    )}
+
                             </div>
                         </div>
                     </div>
                 </DialogPanel>
             </Dialog>
         </header>
-
     )
 }
 

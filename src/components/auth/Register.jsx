@@ -38,11 +38,11 @@ const Register = () => {
           const user = await authService.register({ email, password, name });
           if (!user) throw new Error('Ha ocurrido un error en el registro', { cause: 'bad_request' });
           dispatch(setUser(user));
-          navigate(lastPath);
+          navigate('/');
           localStorage.removeItem('lastPath');
         } catch (err) {
           if (['ERR_BAD_REQUEST', 'ERR_NOT_FOUND'].includes(err.code)) {
-            setError('Error en el registro. Por favor, intente nuevamente.');
+            setError({ message: 'Usuario no encontrado' });
           } else {
             setError(handleApiError(err))
           }
@@ -101,7 +101,7 @@ const Register = () => {
                     </svg>
                   </div>
                   <div className="ml-3">
-                    <p className="text-sm text-red-700 font-medium">{error}</p>
+                    <p className="text-sm text-red-700 font-medium">{error.message}</p>
                   </div>
                 </div>
               </div>

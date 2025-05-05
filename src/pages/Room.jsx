@@ -1,47 +1,51 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 import RoomGrid from '../components/rooms/RoomGrid';
 import Loader from '../components/ui/Loader';
 import ErrorMessage from '../components/ui/ErrorMessage';
 import RoomFilter from '../components/rooms/RoomFilter';
-import { handleApiError } from '../utils/handleApiError';
 import Pagination from '../components/ui/Pagination';
+import { handleApiError } from '../utils/handleApiError';
 import { RoomService } from '../services/RoomService';
+import { setRooms } from '../feautere/room/roomSlice';
+
+const roomService = new RoomService();
 
 const Room = () => {
-  const [rooms, setRooms] = useState([]);
+  const [rooms, setRoomsState] = useState([]);
   const [allRooms, setAllRooms] = useState([]);
-  const [data, setData] = useState({});
+  const [pagination, setPagination] = useState({});
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const roomService = new RoomService();
+  const dispatch = useDispatch();
 
-  const getRooms = async () => {
+  const getRooms = useCallback(async () => {
     setLoading(true);
+    setError(null);
     try {
-      const data = await roomService.findAll(`?page=${page}&limit=12`);
-      
-  
-      if (data) {
-        setData(data); 
-        setAllRooms(data.rooms);
-        setRooms(data.rooms);
+      const res = await roomService.findAll(`?page=${page}&limit=12`);
+      if (res?.rooms) {
+        setRoomsState(res.rooms);
+        setAllRooms(res.rooms);
+        setPagination({ totalPages: res.totalPages, total: res.total, page: res.page, limit: res.limit });
+        dispatch(setRooms(res.rooms));
       }
     } catch (err) {
-      console.log(err)
-      setError(handleApiError(error));
+      console.error(err);
+      setError(handleApiError(err));
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, dispatch]);
 
   useEffect(() => {
     getRooms();
-  }, [page]);
+  }, [getRooms]);
 
   const handleNewPage = (newPage) => {
-    if (newPage >= 1 && newPage <= data.totalPages) {
+    if (newPage >= 1 && newPage <= pagination.totalPages) {
       setPage(newPage);
     }
   };
@@ -50,29 +54,25 @@ const Room = () => {
   if (error) return <ErrorMessage error={error} />;
 
   return (
-    <>
-      <div className="bg-white">
-        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-          <div className="flex justify-start mt-4">
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900">Habitaciones</h2>
-          </div>
-          <div className="flex justify-end mt-4">
-          <RoomFilter allRooms={allRooms} setRooms={setRooms} />
-          </div>
-          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            {
-              rooms.map((room, index) => (
-                <RoomGrid key={index} room={room} />
-              ))
-            }
-          </div>
-          <Pagination
-            {...data}
-            onPageChange={handleNewPage}
-          />
+    <div className="bg-white animated__animated animated__fadeIn">
+      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900">Habitaciones</h2>
+          <RoomFilter allRooms={allRooms} setRooms={setRoomsState} />
         </div>
+
+        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+          {rooms.map((room) => (
+            <RoomGrid key={room.id || room._id} room={room} />
+          ))}
+        </div>
+
+        <Pagination
+          {...pagination}
+          onPageChange={handleNewPage}
+        />
       </div>
-    </>
+    </div>
   );
 };
 
