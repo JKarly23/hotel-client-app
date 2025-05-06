@@ -14,12 +14,11 @@ const Navbar = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
     const { user, isAuthenticated } = useSelector((state) => state.auth);
-    console.log(user)
     // Imagen de perfil por defecto
     const img = user?.img ? user.img : 'https://th.bing.com/th/id/R.6b0022312d41080436c52da571d5c697?rik=CWihwAiT6S2emg&pid=ImgRaw&r=0'
 
     return (
-        <header className="absolute inset-x-0 top-0 z-50">
+        <header className="absolute inset-x-0 top-0 z-50 bg-gradient-to-b from-gray-100 to-white shadow">
             <nav aria-label="Global" className="flex items-center justify-between p-6 lg:px-8">
                 <div className="flex lg:flex-1">
                     <Link to="/" className="-m-1.5 p-1.5">

@@ -8,6 +8,7 @@ import { handleApiError } from '../../utils/handleApiError';
 import Loader from '../ui/Loader';
 import ErrorMessage from '../ui/ErrorMessage';
 import { updateUser } from '../../feautere/auth/authSlice'
+import { useEffect } from 'react';
 
 
 const userService = new AuthService()
@@ -15,6 +16,7 @@ const userService = new AuthService()
 const UserEdit = () => {
     const { user } = useSelector((state) => state.auth)
     const dispatch = useDispatch()
+    const [secureUrl, setSecureUrl] = useState('');
 
     const [value, setForm] = useState({
         name: user?.name || '',
@@ -25,10 +27,11 @@ const UserEdit = () => {
         img: user?.img || '',
     })
 
+    console.log(value)
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-    let secureUrl = '';
 
 
     const handleChange = ({ target }) => {
@@ -40,17 +43,29 @@ const UserEdit = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        if (!value.img.startsWith('http')) {
-            secureUrl = await fileUpload(value.img);
+
+
+        let updatedImg = value.img;
+
+        // Solo subimos si es una imagen nueva en base64
+        if (value.img && value.img.startsWith('data:image')) {
+            try {
+                updatedImg = await fileUpload(value.img);
+            } catch (uploadError) {
+                setError("Error al subir la imagen");
+                setLoading(false);
+                return;
+            }
         }
+
         try {
             setLoading(true);
             const data = await userService.update(user.id, {
                 ...value,
-                img: secureUrl,
+                img: updatedImg,
             });
             if (data) {
-                console.log('Data: ',data);
+                console.log('Data: ', data);
                 dispatch(updateUser(data))
                 navigate('/profile');
             }
@@ -61,8 +76,6 @@ const UserEdit = () => {
         }
     }
 
-    // Imagen de perfil por defecto
-    const img = value.img || 'https://th.bing.com/th/id/R.6b0022312d41080436c52da571d5c697?rik=CWihwAiT6S2emg&pid=ImgRaw&r=0'
     if (loading) return <Loader message='Actualizando...' />
     if (error) return <ErrorMessage error={error} />
     return (
@@ -74,12 +87,40 @@ const UserEdit = () => {
                 <div className="flex flex-col md:flex-row items-center gap-10">
                     {/* Avatar */}
                     <div className="relative group">
-                        <img
-                            src={img}
-                            alt="Avatar"
-                            className="w-40 h-40 rounded-full border-4 border-indigo-400 shadow-lg object-cover cursor-pointer transition-transform duration-300 group-hover:scale-105"
-                            onClick={() => document.getElementById('fileInput').click()}
-                        />
+                        {value.img ? (
+                            <img
+                                src={value.img}
+                                alt="Avatar"
+                                className="w-40 h-40 rounded-full border-4 border-indigo-400 shadow-lg object-cover cursor-pointer transition-transform duration-300 group-hover:scale-105"
+                                onClick={() => document.getElementById('fileInput').click()}
+                            />
+                        ) : (
+                            <div 
+                                className="w-40 h-40 rounded-full border-4 border-indigo-400 shadow-lg bg-gray-100 flex items-center justify-center cursor-pointer transition-transform duration-300 group-hover:scale-105"
+                                onClick={() => document.getElementById('fileInput').click()}
+                            >
+                                <svg 
+                                    xmlns="http://www.w3.org/2000/svg" 
+                                    className="h-16 w-16 text-gray-400" 
+                                    fill="none" 
+                                    viewBox="0 0 24 24" 
+                                    stroke="currentColor"
+                                >
+                                    <path 
+                                        strokeLinecap="round" 
+                                        strokeLinejoin="round" 
+                                        strokeWidth={2} 
+                                        d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" 
+                                    />
+                                    <path 
+                                        strokeLinecap="round" 
+                                        strokeLinejoin="round" 
+                                        strokeWidth={2} 
+                                        d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" 
+                                    />
+                                </svg>
+                            </div>
+                        )}
                         <input
                             id="fileInput"
                             type="file"

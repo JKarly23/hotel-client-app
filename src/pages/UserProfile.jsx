@@ -12,7 +12,7 @@ const UserProfile = () => {
     <div className="min-h-screen flex flex-col items-center justify-center from-indigo-100 via-purple-100 to-pink-100 p-4">
       <div className="relative w-full max-w-xl bg-white rounded-3xl shadow-2xl p-8 animate__animated animate__fadeIn flex flex-col items-center">
         {/* Botón editar */}
-        <Link to="/profile/edit"
+        <Link to={`/profile/edit/${user.id}`}
           className="absolute -top-7 left-1/2 -translate-x-1/2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-4 shadow-lg animate__animated animate__bounceIn"
           title="Editar perfil"
         >

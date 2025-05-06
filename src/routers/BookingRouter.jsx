@@ -4,7 +4,7 @@ import Navbar from '../components/ui/Navbar'
 import Booking from '../components/booking/Booking'
 import { useSelector } from 'react-redux'
 
-const BookingRoute = () => {
+const BookingRouter = () => {
     const user = useSelector((state) => state.auth);
     return !user
         ? < Navigate to='/auth/login' />
@@ -17,4 +17,4 @@ const BookingRoute = () => {
 
 }
 
-export default BookingRoute
+export default BookingRouter

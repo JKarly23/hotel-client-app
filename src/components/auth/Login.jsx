@@ -40,6 +40,7 @@ const Login = () => {
         try {
           setLoading(true);
           const user = await authService.login({ email, password });
+          localStorage.setItem('token', user.token);
           dispatch(setUser(user));
           navigate(lastPath);
           localStorage.removeItem('lastPath');

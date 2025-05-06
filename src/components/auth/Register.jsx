@@ -37,6 +37,7 @@ const Register = () => {
           setLoading(true);
           const user = await authService.register({ email, password, name });
           if (!user) throw new Error('Ha ocurrido un error en el registro', { cause: 'bad_request' });
+          localStorage.setItem('token', user.token);
           dispatch(setUser(user));
           navigate('/');
           localStorage.removeItem('lastPath');

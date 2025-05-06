@@ -15,7 +15,7 @@ const UserRouter = () => {
             <Navbar />
             <Routes>
                 <Route path='/' element={<UserProfile />} />
-                <Route path='/edit' element={<UserEdit/>}/>
+                <Route path='/edit/:id' element={<UserEdit/>}/>
             </Routes>
 
         </div>

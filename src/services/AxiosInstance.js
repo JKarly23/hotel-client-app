@@ -9,12 +9,9 @@ export class AxiosInstance {
       },
     });
     this.axiosInstance.interceptors.request.use(config => {
-      const user = JSON.parse(localStorage.getItem('user'));
-      if (user) {
-        const { token } = user;
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`
-        }
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`
       }
       return config;
     }, error => {

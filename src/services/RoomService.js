@@ -5,4 +5,8 @@ export class RoomService extends BasicService {
     super();
     this.secureUrl = '/room';
   }
+  async getRoomAvailable() {
+    const { data } = await this.axiosInstance.get(`${this.secureUrl}/available`);
+    return data;
+  }
 }

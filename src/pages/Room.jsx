@@ -54,7 +54,7 @@ const Room = () => {
   if (error) return <ErrorMessage error={error} />;
 
   return (
-    <div className="bg-white animated__animated animated__fadeIn">
+    <div className="bg-white animated__animated animated__fadeIn absolute inset-x-0">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">Habitaciones</h2>
