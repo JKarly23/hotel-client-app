@@ -10,6 +10,11 @@ export class BasicService extends AxiosInstance {
     return data;
   }
 
+  async findAllData() {
+    const { data } = await this.axiosInstance.get(`${this.secureUrl}/all`);
+    return data;
+  }
+
   async findById(id) {
     const { data } = await this.axiosInstance.get(`${this.secureUrl}/${id}`);
     return data;

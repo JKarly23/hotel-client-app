@@ -2,14 +2,16 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom'
 import { logout } from '../../feautere/auth/authSlice';
+import { useSelector } from 'react-redux';
 
 const UserNav = ({ img, dropdownOpen, setDropdownOpen, setMobileMenuOpen }) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const { user } = useSelector((state) => state.auth);
     const handleLogout = () => {
-        dispatch(logout()) 
-        setDropdownOpen(false)
-        setMobileMenuOpen(false)
+        dispatch(logout(user.id));
+        setDropdownOpen(false);
+        setMobileMenuOpen(false);
         navigate('/')
     }
     return (

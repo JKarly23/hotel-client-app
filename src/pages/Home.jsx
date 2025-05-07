@@ -92,7 +92,7 @@ const Home = () => {
 
     intervalRef.current = setInterval(() => {
       setStart((prev) => (prev + 3) % rooms.length);
-    }, 10000);
+    }, 15000);
 
     servicesRef.current = setInterval(() => {
       setStart((prev) => (prev + 1) % hotelServices.length);
@@ -100,11 +100,11 @@ const Home = () => {
 
     return () => clearInterval(intervalRef.current, servicesRef.current);
   }, [rooms]);
-
+  const end = window.innerWidth > 768 ? 4 : 1
   const visibleRooms =
     rooms.length < 4
       ? rooms
-      : [...rooms, ...rooms].slice(start, start + 3);
+      : [...rooms, ...rooms].slice(start, start + end);
   const services =
     hotelServices.length < 4
       ? hotelServices
@@ -113,10 +113,9 @@ const Home = () => {
   return (
     <div className="bg-gradient-to-b from-gray-100 to-indigo-50 min-h-screen text-gray-800">
 
-
       {/* Hero Section */}
       <section id="hero" className="relative h-screen w-full overflow-hidden animate__animated animate__fadeInUp ">
-        <div className="absolute inset-0 w-full h-full m-5">
+        <div className="absolute inset-0 w-full h-full ">
           <img
             src={heroImage}
             alt="Hotel LuxeStay"
@@ -162,7 +161,7 @@ const Home = () => {
       </nav>
 
       {/* Sección Sobre Nosotros */}
-      <section id="about" className="py-20 animate__animated animate__fadeInUp">
+      <section id="about" className="py-20 animate__animated animate__fadeInUp h-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl">Sobre Nosotros</h2>
@@ -178,7 +177,7 @@ const Home = () => {
                 Nuestras instalaciones de primer nivel, atención personalizada y ubicación privilegiada nos convierten en la opción perfecta tanto para viajeros de negocios como para aquellos que buscan unas vacaciones inolvidables.
               </p>
             </div>
-            <div className="rounded-lg overflow-hidden shadow-xl">
+            <div className="rounded-lg overflow-hidden shadow-xl hidden sm:block ">
               <img src={hotel} alt="Hotel LuxeStay Interior" className="w-full h-auto" />
             </div>
           </div>
@@ -186,7 +185,7 @@ const Home = () => {
       </section>
 
       {/* Sección Habitaciones */}
-      <section id="rooms" className="py-20 relative">
+      <section id="rooms" className="py-20 relative h-full hidden:overflow-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl tracking-tight">Nuestras Habitaciones</h2>
@@ -198,16 +197,16 @@ const Home = () => {
           <div className="relative">
             {/* Gradiente difuminado inferior */}
             <div className="pointer-events-none absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-white/90 to-transparent z-10 "></div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {visibleRooms.map((room, idx) => (
                 <div
                   key={room.id}
-                  className={`bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all border border-gray-100 animate__animated animate__fadeIn animate__delay-${idx}s`}
+                  className={`bg-white rounded-3xl overflow-hidden shadow-xl hover:shadow-2xl transition-all border border-gray-100 animate__animated animate__fadeIn`}
                 >
                   <img
                     src={room.img}
                     alt={room.type}
-                    className="w-full h-64 object-cover object-center transition-transform duration-500 hover:scale-105"
+                    className="w-full h-50 lg:h-65  object-cover object-center transition-transform duration-500 hover:scale-105"
                   />
                   <div className="p-7 flex flex-col gap-3">
                     <h3 className="text-xl font-bold text-gray-900 mb-1">Habitación {room.type}</h3>
@@ -216,7 +215,7 @@ const Home = () => {
                       <span className="text-indigo-600 font-extrabold text-lg">${room.price}/noche</span>
                       <a
                         href={`/room/${room.id}`}
-                        className="inline-block rounded-full bg-indigo-50 text-indigo-700 px-4 py-2 text-sm font-semibold hover:bg-indigo-600 hover:text-white transition"
+                        className="inline-block rounded-full bg-indigo-50 text-indigo-700 px-4 py-2 text-sm font-semibold hover:bg-indigo-600  hover:text-white transition"
                       >
                         Ver detalles →
                       </a>
@@ -237,7 +236,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Sección Habitaciones */}
+
       <section id="services" className="py-20 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
@@ -262,7 +261,7 @@ const Home = () => {
 
                 height={400}
 
-                className="w-full h-130 object-cover object-center transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-70 lg:h-130 object-cover object-center transition-transform duration-500 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex flex-col justify-end p-8">
                 <h3 className="text-white text-2xl font-bold mb-2 drop-shadow">{service.nombre}</h3>
@@ -297,7 +296,7 @@ const Home = () => {
                 className="w-full h-[350px] border-0"
               ></iframe>
             </div>
-            <div className="flex flex-col items-center md:items-start">
+            <div className="flex flex-col items-center md:items-start hidden sm:block">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">LuxeStay Hotel</h3>
               <p className="text-gray-700 mb-2 flex items-center">
                 <span className="material-icons text-indigo-600 mr-2">location_on</span>

@@ -42,6 +42,7 @@ const Login = () => {
           const user = await authService.login({ email, password });
           localStorage.setItem('token', user.token);
           dispatch(setUser(user));
+          console.log(user);
           navigate(lastPath);
           localStorage.removeItem('lastPath');
         } catch (err) {

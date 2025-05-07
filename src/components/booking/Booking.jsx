@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { Listbox } from '@headlessui/react'
@@ -14,11 +14,12 @@ import {
     CurrencyDollarIcon,
 } from '@heroicons/react/20/solid'
 import { useForm } from '../../hooks/useForm'
-import { BookingService } from '../../services/Booking'
 import Loader from '../ui/Loader'
 import ErrorMessage from '../ui/ErrorMessage'
 import { handleApiError } from '../../utils/handleApiError'
 import QRDownload from './QRDownload'
+import { BookingService } from '../../services/BookingService';
+
 
 const paymentMethods = [
     { label: 'Tarjeta de Crédito', value: 'credit_card' },

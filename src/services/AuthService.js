@@ -16,8 +16,8 @@ export class AuthService extends BasicService {
     return data;
   }
 
-  async logout() {
-    const { data } = await this.axiosInstance.post(`${this.secureUrl}/logout`);
+  async logout(id) {
+    const { data } = await this.axiosInstance.post(`${this.secureUrl}/logout/${id}`);
     return data;
   }
 
