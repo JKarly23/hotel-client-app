@@ -26,8 +26,9 @@ export const authSlice = createSlice({
       userService.logout(action.payload)
     },
     updateUser: (state, action) => {
-      state.user = action.payload;
-      localStorage.setItem('user', JSON.stringify(state.user));
+      const user = action.payload;
+      state.user = user;
+      localStorage.setItem('user', JSON.stringify(user));
     },
     updateUser: (state, action) => {
       state.users = state.users.map((user) => user.id === action.payload.id

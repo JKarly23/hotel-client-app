@@ -28,7 +28,6 @@ const Login = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const { errors } = useSelector((state) => state.errors)
-  const lastPath = localStorage.getItem('lastPath') || '/'
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -42,8 +41,9 @@ const Login = () => {
           const user = await authService.login({ email, password });
           localStorage.setItem('token', user.token);
           dispatch(setUser(user));
-          console.log(user);
-          navigate(lastPath);
+          navigate('/rooms', {
+            replace: true
+          });
           localStorage.removeItem('lastPath');
         } catch (err) {
           if (['ERR_BAD_REQUEST', 'ERR_NOT_FOUND'].includes(err.code)) {

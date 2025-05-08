@@ -21,7 +21,6 @@ const Register = () => {
   const { email, password, name } = value
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null)
-  const lastPath = localStorage.getItem('lastPath') || '/'
   const dispatch = useDispatch()
   const navigate = useNavigate();
   const { errors } = useSelector((state) => state.errors)
@@ -40,7 +39,6 @@ const Register = () => {
           localStorage.setItem('token', user.token);
           dispatch(setUser(user));
           navigate('/');
-          localStorage.removeItem('lastPath');
         } catch (err) {
           if (['ERR_BAD_REQUEST', 'ERR_NOT_FOUND'].includes(err.code)) {
             setError({ message: 'Usuario no encontrado' });

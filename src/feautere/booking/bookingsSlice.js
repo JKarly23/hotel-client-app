@@ -18,12 +18,12 @@ export const bookingSlice = createSlice({
         updateBooking: (state, action) => {
             const updatedBooking = action.payload;
             state.bookings = state.bookings.map(booking =>
-                booking._id === updatedBooking._id ? updatedBooking : booking
+                booking.id === updatedBooking.id ? updatedBooking : booking
             );
         },
         deleteBooking: (state, action) => {
             const bookingId = action.payload;
-            state.bookings = state.bookings.filter(booking => booking._id !== bookingId);
+            state.bookings = state.bookings.filter(booking => booking.id !== bookingId);
         },
         addBooking: (state, action) => {
             const newBooking = action.payload;

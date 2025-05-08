@@ -1,16 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { MailIcon, GlobeIcon, CalendarIcon, PhoneIcon, FingerprintIcon } from "lucide-react";
+import { EditIcon } from 'lucide-react';
+import UserBookingsTable from '../components/user/UserBookingsTable';
+import { useEffect } from 'react';
 
 const UserInfoItem = ({ icon, label }) => (
-  <div className="flex items-center gap-3 text-gray-600">
-    <span className="w-5 h-5 text-indigo-500">{icon}</span>
-    <span>{label}</span>
+  <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-xl shadow-sm">
+    <div className="text-indigo-600">{icon}</div>
+    <span className="text-gray-700 text-sm">{label}</span>
   </div>
 );
-
 const UserProfile = () => {
-  const { user } = useSelector((state) => state.auth);
+  const [user, setUser] = useState({});
+  useEffect(() => {
+    const userData = useSelector((state) => state.auth.user);
+    setUser(userData);
+  }, [])
+  const [showBookings, setShowBookings] = useState(false);
   const img = user?.img || 'https://th.bing.com/th/id/R.6b0022312d41080436c52da571d5c697?rik=CWihwAiT6S2emg&pid=ImgRaw&r=0';
 
   const iconMap = {
@@ -44,69 +52,63 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-gradient-to-tr from-indigo-100 via-purple-100 to-pink-100 mt-20">
-      <div className="relative max-w-2xl w-full bg-white rounded-3xl shadow-xl p-8 space-y-8">
-        {/* Edit Button */}
-        <Link
-          to={`/profile/edit/${user.id}`}
-          className="absolute -top-6 left-1/2 transform -translate-x-1/2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-3 shadow-lg"
-          title="Editar perfil"
-        >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={2.2} viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M9 13..." />
-          </svg>
-        </Link>
+    <>{
+      showBookings ? <UserBookingsTable key={user.id} bookings={user.bookings} back={setShowBookings} />
+        :
+        <div className="min-h-[90vh] flex items-center justify-center p-6 bg-gradient-to-tr from-indigo-100 via-purple-100 to-pink-100 mt-20">
+          <div className="relative w-full max-w-5xl bg-white rounded-3xl shadow-xl p-10 grid grid-cols-1 md:grid-cols-2 gap-12">
+            {/* Avatar & Edit Button */}
+            <div className="flex flex-col items-center text-center space-y-5">
+              <div className="relative">
+                <img src={img} alt="Avatar" className="w-48 h-48 rounded-full border-4 border-indigo-400 shadow-md object-cover" />
+                <Link
+                  to={`/profile/edit/${user.id}`}
+                  className="absolute bottom-3 right-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full p-2 shadow-lg"
+                  title="Editar perfil"
+                >
+                  <EditIcon />
+                </Link>
+              </div>
+              <h2 className="text-3xl font-bold text-indigo-700">{user?.name}</h2>
+              <span className="text-sm bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full uppercase tracking-wide">{user?.role}</span>
+            </div>
 
-        {/* Avatar & Name */}
-        <div className="flex flex-col items-center text-center">
-          <img src={img} alt="Avatar" className="w-32 h-32 rounded-full border-4 border-indigo-400 shadow-md" />
-          <h2 className="text-3xl font-bold text-indigo-700 mt-4">{user?.name}</h2>
-          <span className="text-xs bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full uppercase tracking-wide mt-1">{user?.role}</span>
-        </div>
+            {/* Info + Bookings */}
+            <div className="flex flex-col justify-center space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <UserInfoItem icon={<MailIcon />} label={user?.email} />
+                {user?.country && <UserInfoItem icon={<GlobeIcon />} label={user.country} />}
+                {user?.birthDate && <UserInfoItem icon={<CalendarIcon />} label={new Date(user.birthDate).toLocaleDateString()} />}
+                {user?.phoneNumber && <UserInfoItem icon={<PhoneIcon />} label={user.phoneNumber} />}
+                <UserInfoItem icon={<FingerprintIcon />} label={user?.id} />
+              </div>
 
-        {/* Personal Info */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <UserInfoItem icon={iconMap.email} label={user?.email} />
-          {user?.country && <UserInfoItem icon={iconMap.country} label={user.country} />}
-          {user?.birthDate && <UserInfoItem icon={iconMap.birthDate} label={new Date(user.birthDate).toLocaleDateString()} />}
-          {user?.phoneNumber && <UserInfoItem icon={iconMap.phone} label={user.phoneNumber} />}
-          <UserInfoItem icon={iconMap.id} label={user?.id} />
-        </div>
+              <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4 shadow-sm">
+                <h3 className="text-lg font-semibold text-indigo-700 mb-2">Reservas</h3>
+                <p className="text-indigo-800 text-sm">
+                  Tienes <span className="font-bold">{user?.bookings?.length || 0}</span> reserva{user?.bookings?.length === 1 ? '' : 's'} registrada{user?.bookings?.length === 1 ? '' : 's'}.
+                </p>
+                <button onClick={() => setShowBookings(true)}
+                  className="inline-block mt-2 text-sm text-indigo-600 hover:underline"
+                >
+                  Ver todas las reservas →
+                </button>
+              </div>
 
-        {/* Bookings */}
-        <div>
-          <h3 className="text-xl font-semibold text-indigo-700 mb-3">Reservas</h3>
-          {user?.bookings?.length > 0 ? (
-            <ul className="space-y-3">
-              {user.bookings.slice(0, 3).map((booking) => (
-                <li key={booking.id} className="flex items-center gap-4 bg-indigo-50 rounded-xl p-4 shadow-sm">
-                  <svg className="w-6 h-6 text-indigo-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <rect width="18" height="10" x="3" y="7" rx="2" />
-                    <path d="M3 17v2a2 2 0 002 2h14a2 2 0 002-2v-2" />
-                  </svg>
-                  <div className="text-indigo-800 font-medium">Habitación: {booking.room?.number || 'N/A'}</div>
-                </li>
-              ))}
-              <Link to={-1} className="inline-flex items-center gap-2 mt-4 text-sm text-indigo-600 hover:underline">
-                Ver todas las reservas
-              </Link>
-            </ul>
-          ) : (
-            <p className="text-gray-500">No tienes reservas recientes.</p>
-          )}
+              <div className="flex justify-start">
+                <Link
+                  to={-1}
+                  className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-5 py-2 rounded-full transition-transform hover:-translate-x-1 shadow"
+                >
+                  Volver
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
+    }
+    </>
 
-        {/* Back Button */}
-        <div className="flex justify-center">
-          <Link
-            to={-1}
-            className="bg-gray-100 hover:bg-gray-200 text-gray-800 px-5 py-2 rounded-full transition-transform hover:-translate-x-1 shadow"
-          >
-            Volver
-          </Link>
-        </div>
-      </div>
-    </div>
   );
 };
 

@@ -10,6 +10,8 @@ import { setRooms } from '../../../feautere/room/roomSlice';
 import { handleApiError } from '../../../utils/handleApiError';
 import Loader from '../../ui/Loader';
 import ErrorMessage from '../../ui/ErrorMessage';
+import ExportButton from '../ExportButton';
+
 
 const statusColors = {
   occupied: "bg-yellow-100 text-yellow-800",
@@ -31,6 +33,16 @@ const bookingStatusLabels = {
   maintenance: 'Maintenance',
   reserved: 'Reserved',
 };
+
+const exportColumns = [
+  { key: "number", label: "Número" },
+  { key: "price", label: "Precio" },
+  { key: "capacity", label: "Capacidad" },
+  { key: "floor", label: "Piso" },
+  { key: "type", label: "Tipo" },
+  { key: "status", label: "Estado" },
+];
+
 
 const PAGE_SIZE = 8;
 
@@ -67,6 +79,19 @@ const RoomTable = () => {
         b.floor?.toString().includes(s)
     );
   }, [rooms, search]);
+
+
+  const exportData = filteredRooms.map(d => ({
+    ...d,
+    type: d.type === 'simplex' ? "Simplex"
+      : d.type === 'duples' ? 'Duples'
+        : d.type === 'deluxe' ? 'Deluxe'
+          : 'Suite',
+    status: d.status === 'available' ? "Disponible"
+      : d.status === 'occupied' ? 'Ocupada'
+        : d.status === 'maintenance' ? 'Mantenimiento'
+          : 'Reservada',
+  }))
 
   // Paginación
   const totalPages = Math.ceil(filteredRooms.length / PAGE_SIZE);
@@ -214,10 +239,16 @@ const RoomTable = () => {
             <button
               onClick={() => handlePageChange(page + 1)}
               disabled={page === totalPages}
-              className={`px-3 py-1 rounded-lg font-semibold transition ${page === totalPages ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'}`}
+              className={`px-3 py-1 mr-85 rounded-lg font-semibold transition ${page === totalPages ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'}`}
             >
               Siguiente
             </button>
+            <ExportButton
+              data={exportData}
+              columns={exportColumns}
+              fileName="habitaciones"
+              format="xlsx"
+            />
           </div>
         </div>
         {modalType === "create" && <RoomCreateModal isOpen onClose={closeModal} />}

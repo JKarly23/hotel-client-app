@@ -47,7 +47,6 @@ const RoomEditModal = ({ isOpen, onClose, room }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('eeeeee')
     let secureUrl = '';
     try {
       if (form.img instanceof File) {
@@ -82,7 +81,7 @@ const RoomEditModal = ({ isOpen, onClose, room }) => {
       onClose();
     };
   }
-  if (loading) return <Loader message="Insertando nueva habitación..." />;
+  if (loading) return <Loader message="Actualizando habitación..." />;
   if (error) return <ErrorMessage error={error} />;
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
