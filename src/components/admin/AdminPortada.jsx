@@ -121,15 +121,15 @@ const AdminPortada = () => {
   const userRolesCounts = countByUserRole(users);
 
   return (
-    <div className="w-full min-h-screen bg-gradient-to-br from-gray-700 via-indigo-400 to-violet-500 p-4 md:p-10 flex flex-col">
+    <div className="w-full h-full min-h-screen bg-gradient-to-br from-gray-150 via-indigo-300 to-violet-250 p-4 md:p-5 flex flex-col">
       <h1 className="text-5xl font-extrabold mb-12 text-white text-center drop-shadow-lg tracking-tight flex items-center justify-center gap-4">
-        <svg className="w-12 h-12 text-white drop-shadow-md" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+        <svg className="w-12 h-10 text-white drop-shadow-md" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
           <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
           <path d="M12 6v6l4 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
         Panel de Administración
       </h1>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 w-full  h-20 max-w-7xl mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 w-full">
         <AnimatedDashboardCard title="Habitaciones" icon={ICONS.rooms}>
           <InfoGrid data={[
             ['Total', rooms.length],
@@ -181,9 +181,9 @@ const AnimatedDashboardCard = ({ title, icon, children }) => (
     initial={{ opacity: 0, y: 50 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.6 }}
-    className="bg-white/90 rounded-3xl shadow-2xl p-8 border border-gray-200 flex flex-col items-center hover:shadow-indigo-300 transition-shadow duration-300"
+    className="bg-white/70 rounded-3xl shadow-2xl p-8 border border-gray-200 flex flex-col items-center hover:shadow-indigo-300 transition-shadow duration-300 h-150"
   >
-    <div className="flex flex-col items-center gap-2 mb-6">
+    <div className="flex flex-col items-center gap-2 mb-2">
       <span>{icon}</span>
       <h2 className="text-2xl font-bold text-gray-800">{title}</h2>
     </div>
@@ -192,7 +192,7 @@ const AnimatedDashboardCard = ({ title, icon, children }) => (
 );
 
 const InfoGrid = ({ data }) => (
-  <div className="grid grid-cols-1 gap-3 text-lg w-full">
+  <div className="grid grid-cols-1 gap-1 text-lg w-full">
     {data.map(([label, value]) => (
       <div key={label} className="flex justify-between text-gray-700 border-b border-gray-100 py-1">
         <span>{label}:</span>

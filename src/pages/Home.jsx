@@ -296,7 +296,7 @@ const Home = () => {
                 className="w-full h-[350px] border-0"
               ></iframe>
             </div>
-            <div className="flex flex-col items-center md:items-start hidden sm:block">
+            <div className="flex flex-col items-center md:items-start sm:block">
               <h3 className="text-2xl font-bold text-gray-900 mb-4">LuxeStay Hotel</h3>
               <p className="text-gray-700 mb-2 flex items-center">
                 <span className="material-icons text-indigo-600 mr-2">location_on</span>

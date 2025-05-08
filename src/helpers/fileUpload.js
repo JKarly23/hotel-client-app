@@ -10,6 +10,7 @@ export const fileUpload = async (file) => {
         });
         if (resp.ok) {
             const data = await resp.json();
+            console.log(data.secure_url)
             return data.secure_url
         } else {
             throw new resp.json()

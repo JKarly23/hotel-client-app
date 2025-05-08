@@ -22,7 +22,15 @@ export const roomSlice = createSlice({
         : room)
     },
     deleteRoom: (state, action) => {
-      state.rooms = state.rooms.filter((room) => room.id !== action.payload);
+      // Filter out the room with matching id and update state
+      const updatedRooms = state.rooms.filter(room => room.id !== action.payload);
+      state.rooms = updatedRooms;
+      
+      // Clear selectedRoom if deleted room was selected
+      if (state.selectedRoom.id === action.payload) {
+        state.selectedRoom = {};
+        localStorage.removeItem('room');
+      }
     },
     addRoom: (state, action) => {
       state.rooms = [...state.rooms, action.payload];
