@@ -24,6 +24,7 @@ const exportColumns = [
 
 
 const UserTable = () => {
+  const { user } = useSelector((state) => state.auth)
   const { users } = useSelector((state) => state.auth);
   const [selectedUser, setSelectedUser] = useState(null);
   const [modalType, setModalType] = useState(null); // "edit" | "delete" | "detail"
@@ -83,21 +84,31 @@ const UserTable = () => {
             Usuarios
           </h2>
 
-          <div className="flex gap-2 w-full md:w-auto">
-            <input
-              type="search"
-              value={search}
-              onChange={e => { setSearch(e.target.value); setPage(1); }}
-              placeholder="Buscar por nombre, email, país, rol..."
-              className="border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition w-full md:w-64"
-            />
+          <div className="flex flex-col md:flex-row items-center gap-4 w-full md:w-auto">
+            <div className="relative w-full md:w-64">
+              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input
+                type="search"
+                value={search}
+                onChange={e => { setSearch(e.target.value); setPage(1); }}
+                placeholder="Buscar por nombre, email, país, rol..."
+                className="pl-10 pr-4 py-2.5 w-full text-sm text-gray-700 bg-white/50 border border-gray-200 rounded-xl shadow-sm focus:outline-none focus:border-indigo-300 focus:ring-2 focus:ring-indigo-200 transition duration-200"
+              />
+            </div>
+            <div className="w-full md:w-auto">
+              <ExportButton
+                data={exportData}
+                columns={exportColumns}
+                fileName="usuarios"
+                format="xlsx"
+                className="w-full md:w-auto"
+              />
+            </div>
           </div>
-          <ExportButton
-            data={exportData}
-            columns={exportColumns}
-            fileName="usuarios"
-            format="xlsx"
-          />
         </div>
 
         <table className="min-w-full divide-y divide-indigo-200">
@@ -133,15 +144,39 @@ const UserTable = () => {
                 </td>
                 <td className="px-4 py-3 text-gray-600">{u.bookings?.length || 0}</td>
                 <td className="px-4 py-3 flex gap-2">
-                  <button onClick={() => openModal("edit", u)} className="p-2 rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 transition" title="Editar">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536M9 13l6-6 3 3-6 6H9v-3z" /></svg>
+                  <button
+                    onClick={() => openModal("detail", u)}
+                    className="p-2 rounded-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 transition"
+                    title="Ver detalles"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="3" />
+                      <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
                   </button>
-                  <button onClick={() => openModal("delete", u)} className="p-2 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 transition" title="Eliminar">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 7V5a2 2 0 00-2-2H7a2 2 0 00-2 2v2" /></svg>
-                  </button>
-                  <button onClick={() => openModal("detail", u)} className="p-2 rounded-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 transition" title="Ver detalles">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                  </button>
+                  {user.role === 'admin' && (
+                    <>
+                      <button
+                        onClick={() => openModal("edit", u)}
+                        className="p-2 rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 transition"
+                        title="Editar"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M15.232 5.232l3.536 3.536M9 13l6-6 3 3-6 6H9v-3z" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => openModal("delete", u)}
+                        className="p-2 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 transition"
+                        title="Eliminar"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 7V5a2 2 0 00-2-2H7a2 2 0 00-2 2v2" />
+                        </svg>
+                      </button>
+                    </>
+                  )
+                  }
                 </td>
               </tr>
             ))}

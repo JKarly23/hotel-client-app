@@ -49,10 +49,11 @@ const PAGE_SIZE = 8;
 const seedService = new SeedService();
 const RoomTable = () => {
 
+  const { user } = useSelector((state) => state.auth)
   const { rooms } = useSelector((state) => state.room);
   const dispatch = useDispatch();
   const [selectedRoom, setSelectedRoom] = useState(null);
-  const [modalType, setModalType] = useState(null); // "create" | "edit" | "delete" | "detail"
+  const [modalType, setModalType] = useState(null);
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -203,15 +204,39 @@ const RoomTable = () => {
                     </span>
                   </td>
                   <td className="px-4 py-3 flex gap-2">
-                    <button onClick={() => openModal("edit", b)} className="p-2 rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 transition" title="Editar">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536M9 13l6-6 3 3-6 6H9v-3z" /></svg>
+                    <button
+                      onClick={() => openModal("detail", b)}
+                      className="p-2 rounded-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 transition"
+                      title="Ver detalles"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
                     </button>
-                    <button onClick={() => openModal("delete", b)} className="p-2 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 transition" title="Eliminar">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 7V5a2 2 0 00-2-2H7a2 2 0 00-2 2v2" /></svg>
-                    </button>
-                    <button onClick={() => openModal("detail", b)} className="p-2 rounded-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 transition" title="Ver detalles">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                    </button>
+                    {user.role === 'admin' && (
+                      <>
+                        <button
+                          onClick={() => openModal("edit", b)}
+                          className="p-2 rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 transition"
+                          title="Editar"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M15.232 5.232l3.536 3.536M9 13l6-6 3 3-6 6H9v-3z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => openModal("delete", b)}
+                          className="p-2 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 transition"
+                          title="Eliminar"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 7V5a2 2 0 00-2-2H7a2 2 0 00-2 2v2" />
+                          </svg>
+                        </button>
+                      </>
+                    )
+                    }
                   </td>
                 </tr>
               ))}
@@ -219,35 +244,61 @@ const RoomTable = () => {
           </table>
           <div className="text-xs text-gray-400 mt-2 md:hidden text-center">Desliza la tabla para ver más columnas</div>
           {/* PAGINACIÓN */}
-          <div className="flex justify-center items-center gap-2 mt-6">
-            <button
-              onClick={() => handlePageChange(page - 1)}
-              disabled={page === 1}
-              className={`px-3 py-1 rounded-lg font-semibold transition ${page === 1 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'}`}
-            >
-              Anterior
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => (
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-8 bg-white/50 p-4 rounded-xl shadow-sm">
+            <div className="flex items-center gap-2">
               <button
-                key={i + 1}
-                onClick={() => handlePageChange(i + 1)}
-                className={`px-3 py-1 rounded-lg font-semibold transition ${page === i + 1 ? 'bg-indigo-600 text-white' : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'}`}
+                onClick={() => handlePageChange(page - 1)}
+                disabled={page === 1}
+                className={`px-4 py-2 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2
+                  ${page === 1 
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                    : 'bg-indigo-500 text-white hover:bg-indigo-600 active:scale-95'
+                  }`}
               >
-                {i + 1}
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                </svg>
+                Anterior
               </button>
-            ))}
-            <button
-              onClick={() => handlePageChange(page + 1)}
-              disabled={page === totalPages}
-              className={`px-3 py-1 mr-85 rounded-lg font-semibold transition ${page === totalPages ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-indigo-100 text-indigo-700 hover:bg-indigo-200'}`}
-            >
-              Siguiente
-            </button>
+              
+              <div className="flex gap-1">
+                {Array.from({ length: totalPages }, (_, i) => (
+                  <button
+                    key={i + 1}
+                    onClick={() => handlePageChange(i + 1)}
+                    className={`w-10 h-10 rounded-lg font-bold transition-all duration-200
+                      ${page === i + 1 
+                        ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-200 scale-110' 
+                        : 'bg-white text-indigo-600 hover:bg-indigo-50'
+                      }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+              </div>
+
+              <button
+                onClick={() => handlePageChange(page + 1)}
+                disabled={page === totalPages}
+                className={`px-4 py-2 rounded-xl font-semibold transition-all duration-200 flex items-center gap-2
+                  ${page === totalPages 
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-indigo-500 text-white hover:bg-indigo-600 active:scale-95'
+                  }`}
+              >
+                Siguiente
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+
             <ExportButton
               data={exportData}
               columns={exportColumns}
               fileName="habitaciones"
               format="xlsx"
+              className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-xl font-semibold transition-all duration-200 active:scale-95 shadow-lg shadow-green-200"
             />
           </div>
         </div>

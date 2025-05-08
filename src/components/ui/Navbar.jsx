@@ -48,20 +48,27 @@ const Navbar = () => {
                     ))}
                 </div>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-                    {!isAuthenticated
-                        ? (
-                            <Link to="/auth/login" className="text-sm/6 font-semibold text-gray-900">
-                                Iniciar sesión <span aria-hidden="true">&rarr;</span>
-                            </Link>
-                        )
-                        : (
+                    {!isAuthenticated ? (
+                        <Link 
+                            to="/auth/login" 
+                            className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-md shadow-sm hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
+                        >
+                            Iniciar sesión
+                            <span aria-hidden="true" className="ml-2 transition-transform duration-200 group-hover:translate-x-1">
+                                →
+                            </span>
+                        </Link>
+                    ) : (
+                        <div className="relative">
                             <UserNav
                                 img={img}
                                 dropdownOpen={dropdownOpen}
                                 setDropdownOpen={setDropdownOpen}
                                 setMobileMenuOpen={setMobileMenuOpen}
+                                className="hover:ring-2 hover:ring-blue-500 transition-all duration-300"
                             />
-                        )}
+                        </div>
+                    )}
                 </div>
             </nav>
             <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="lg:hidden">
@@ -71,10 +78,10 @@ const Navbar = () => {
                         <Link to="/" className="-m-1.5 p-1.5">
                             <span className="sr-only">LuxerGTk</span>
                             <img
-                                alt="Logo"
-                                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                                className="h-8 w-auto"
-                            />
+                            alt="Logo"
+                            src="../../../public/hotel-icon-symbol-sign-vector.jpg"
+                            className="h-12 w-auto rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                        />
                         </Link>
                         <button
                             type="button"

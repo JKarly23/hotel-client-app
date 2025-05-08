@@ -7,6 +7,8 @@ const Sidebar = () => {
   const dispatch = useDispatch()
   const { user } = useSelector((state) => state.auth)
   const [isOpen, setIsOpen] = useState(true)
+  const role = user.role === 'admin'
+    ? 'Administrador' : 'Recepcionista'
 
   const handleClick = (seccion) => {
     dispatch(setSeccionSelected(seccion))
@@ -100,7 +102,7 @@ const Sidebar = () => {
                 >
                   {user.name}
                 </Link>
-                <p className="text-xs text-gray-500 mt-1 bg-indigo-50 px-2 py-0.5 rounded-full w-fit">Administrador</p>
+                <p className="text-xs text-gray-500 mt-1 bg-indigo-50 px-2 py-0.5 rounded-full w-fit">{role}</p>
               </div>
             </div>
 

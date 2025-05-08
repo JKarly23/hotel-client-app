@@ -6,6 +6,7 @@ import BookingDeleteModal from './BookingDeleteModal';
 import BookingDetailModal from './BookingDetailModal';
 import BookingEditModal from './BookingEditModal';
 import ExportButton from '../ExportButton';
+import BookingScanner from './BookingScanner';
 
 
 // Colores y etiquetas de estado
@@ -41,13 +42,14 @@ const exportColumns = [
 ];
 
 const BookingTable = () => {
+  const { user } = useSelector((state) => state.auth);
   const { bookings } = useSelector((state) => state.booking);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [modalType, setModalType] = useState(null); // "edit" | "delete" | "detail"
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
-  const [loading] = useState(false);
-  const [error] = useState(null);
+  const [scannerAction, setScannerAction] = useState('');
+  const [showScanner, setShowScanner] = useState(false);
 
   const openModal = (type, booking = null) => {
     setSelectedBooking(booking);
@@ -89,11 +91,9 @@ const BookingTable = () => {
     if (newPage >= 1 && newPage <= totalPages) setPage(newPage);
   };
 
-  if (loading) return <Loader message={'Cargando reservas...'} />;
-  if (error) return <ErrorMessage error={error} />;
-
   return (
     <>
+      {showScanner && <BookingScanner action={scannerAction} />}
       <div className="w-full min-h-screen bg-gradient-to-br from-gray-50 via-indigo-100 to-violet-150 p-4 md:p-10 shadow-2xl">
         <div className="bg-white/90 rounded-3xl shadow-xl p-6 overflow-x-auto">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
@@ -101,14 +101,21 @@ const BookingTable = () => {
               <svg className="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" strokeWidth="2" /><path d="M16 2v4M8 2v4M3 10h18" stroke="currentColor" strokeWidth="2" /></svg>
               Reservas
             </h2>
-            <div className="flex gap-2 w-full md:w-auto">
-              <input
-                type="search"
-                value={search}
-                onChange={e => { setSearch(e.target.value); setPage(1); }}
-                placeholder="Buscar por habitación, usuario, estado..."
-                className="border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 transition w-full md:w-64"
-              />
+            <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+              <div className="relative w-full md:w-64">
+                <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
+                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+                <input
+                  type="search"
+                  value={search}
+                  onChange={e => { setSearch(e.target.value); setPage(1); }}
+                  placeholder="Buscar por habitación, usuario, estado..."
+                  className="pl-10 w-full border border-gray-300 rounded-xl px-4 py-2.5 text-sm bg-white/80 backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent transition shadow-sm hover:shadow-md"
+                />
+              </div>
               <ExportButton
                 data={exportData}
                 columns={exportColumns}
@@ -116,6 +123,34 @@ const BookingTable = () => {
                 format="xlsx"
               />
             </div>
+            {user.role === 'recepcionist' && (
+              <div className="flex gap-3">
+                <button
+                  onClick={() => {
+                    setScannerAction("checkin");
+                    setShowScanner(true);
+                  }}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl transition shadow-sm hover:shadow-md"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                  Escanear Check-in
+                </button>
+                <button
+                  onClick={() => {
+                    setScannerAction("checkout");
+                    setShowScanner(true);
+                  }}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-xl transition shadow-sm hover:shadow-md"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                  Escanear Check-out
+                </button>
+              </div>
+            )}
           </div>
           <table className="min-w-full divide-y divide-indigo-200">
             <thead>
@@ -154,16 +189,40 @@ const BookingTable = () => {
                     </span>
                   </td>
                   <td className="px-4 py-3 flex gap-2">
-                    <button onClick={() => openModal("edit", b)} className="p-2 rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 transition" title="Editar">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536M9 13l6-6 3 3-6 6H9v-3z" /></svg>
-                    </button>
-                    <button onClick={() => openModal("delete", b)} className="p-2 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 transition" title="Eliminar">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 7V5a2 2 0 00-2-2H7a2 2 0 00-2 2v2" /></svg>
-                    </button>
-                    <button onClick={() => openModal("detail", b)} className="p-2 rounded-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 transition" title="Ver detalles">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" /><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                    </button>
-                  </td>
+                  <button
+                    onClick={() => openModal("detail", b)}
+                    className="p-2 rounded-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 transition"
+                    title="Ver detalles"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                      <circle cx="12" cy="12" r="3" />
+                      <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    </svg>
+                  </button>
+                  {user.role === 'admin' && (
+                    <>
+                      <button
+                        onClick={() => openModal("edit", b)}
+                        className="p-2 rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 transition"
+                        title="Editar"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M15.232 5.232l3.536 3.536M9 13l6-6 3 3-6 6H9v-3z" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => openModal("delete", b)}
+                        className="p-2 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 transition"
+                        title="Eliminar"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                          <path d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 7V5a2 2 0 00-2-2H7a2 2 0 00-2 2v2" />
+                        </svg>
+                      </button>
+                    </>
+                  )
+                  }
+                </td>
                 </tr>
               ))}
             </tbody>
@@ -195,11 +254,12 @@ const BookingTable = () => {
               Siguiente
             </button>
           </div>
-        </div>
-        {modalType === "edit" && <BookingEditModal isOpen onClose={closeModal} booking={selectedBooking} />}
+        </div >
+        {modalType === "edit" && <BookingEditModal isOpen onClose={closeModal} booking={selectedBooking} />
+        }
         {modalType === "delete" && <BookingDeleteModal isOpen onClose={closeModal} booking={selectedBooking} />}
         {modalType === "detail" && <BookingDetailModal isOpen onClose={closeModal} booking={selectedBooking} />}
-      </div>
+      </div >
     </>
   );
 };

@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { MailIcon, GlobeIcon, CalendarIcon, PhoneIcon, FingerprintIcon } from "lucide-react";
-import { EditIcon } from 'lucide-react';
+import { MailIcon, GlobeIcon, CalendarIcon, PhoneIcon, FingerprintIcon, EditIcon } from "lucide-react";
 import UserBookingsTable from '../components/user/UserBookingsTable';
 import { useEffect } from 'react';
 
@@ -13,11 +12,9 @@ const UserInfoItem = ({ icon, label }) => (
   </div>
 );
 const UserProfile = () => {
-  const [user, setUser] = useState({});
-  useEffect(() => {
-    const userData = useSelector((state) => state.auth.user);
-    setUser(userData);
-  }, [])
+
+  const { user } = useSelector((state) => state.auth);
+
   const [showBookings, setShowBookings] = useState(false);
   const img = user?.img || 'https://th.bing.com/th/id/R.6b0022312d41080436c52da571d5c697?rik=CWihwAiT6S2emg&pid=ImgRaw&r=0';
 
@@ -88,11 +85,14 @@ const UserProfile = () => {
                 <p className="text-indigo-800 text-sm">
                   Tienes <span className="font-bold">{user?.bookings?.length || 0}</span> reserva{user?.bookings?.length === 1 ? '' : 's'} registrada{user?.bookings?.length === 1 ? '' : 's'}.
                 </p>
-                <button onClick={() => setShowBookings(true)}
-                  className="inline-block mt-2 text-sm text-indigo-600 hover:underline"
-                >
-                  Ver todas las reservas →
-                </button>
+                {
+                  user?.bookings?.length  > 0 &&
+                  < button onClick={() => setShowBookings(true)}
+                    className="inline-block mt-2 text-sm text-indigo-600 hover:underline"
+                  >
+                    Ver todas las reservas →
+                  </button>
+                }
               </div>
 
               <div className="flex justify-start">
@@ -105,7 +105,7 @@ const UserProfile = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div >
     }
     </>
 
