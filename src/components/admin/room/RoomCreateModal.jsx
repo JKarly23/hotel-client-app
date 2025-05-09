@@ -4,10 +4,10 @@ import { UploadCloud, X } from "lucide-react";
 import { RoomService } from "../../../services/RoomService";
 import { fileUpload } from "../../../helpers/fileUpload";
 import { useDispatch } from "react-redux";
+import { setUser } from "../../../feautere/auth/authSlice";
 import { handleApiError } from "../../../utils/handleApiError";
 import Loader from "../../ui/Loader";
 import ErrorMessage from "../../ui/ErrorMessage";
-import { addRoom } from "../../../feautere/room/roomSlice";
 
 const roomService = new RoomService();
 
@@ -75,7 +75,7 @@ const RoomCreateModal = ({ isOpen, onClose }) => {
       console.log(room)
       const data = await roomService.create(room);
       if (data) {
-        dispatch(addRoom(data));
+        dispatch(setUser(data));
       }
     } catch (err) {
       setError(handleApiError(err));
@@ -90,7 +90,7 @@ const RoomCreateModal = ({ isOpen, onClose }) => {
   if (error) return <ErrorMessage error={error} />;
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} className="w-300">
+    <Modal isOpen={isOpen} onClose={onClose}>
       <div className="relative bg-white p-6 rounded-2xl shadow-2xl max-w-2xl w-full mx-auto">
         <button
           onClick={onClose}
@@ -105,7 +105,7 @@ const RoomCreateModal = ({ isOpen, onClose }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Formulario ocupa 2/3 en desktop */}
-          <form onSubmit={handleSubmit} className="space-y-6 md:col-span-2 order-2 md:order-1 w-100 mx-1 md:p-8">
+          <form onSubmit={handleSubmit} className="space-y-6 md:col-span-2 order-2 md:order-1">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
                 <label htmlFor="number" className="text-sm font-semibold text-gray-700">
@@ -223,6 +223,40 @@ const RoomCreateModal = ({ isOpen, onClose }) => {
               </div>
             </div>
 
+            <div className="flex flex-col items-center">
+              {preview && (
+                <div className="w-full flex flex-col items-center mb-2">
+                  <img
+                    src={preview}
+                    alt="Vista previa"
+                    className="max-w-xs w-full h-48 object-cover rounded-xl border border-gray-300 shadow mb-2"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPreview(null);
+                      setForm((prev) => ({ ...prev, img: null }));
+                    }}
+                    className="text-xs text-pink-600 hover:underline mb-2"
+                  >
+                    Quitar imagen
+                  </button>
+                </div>
+              )}
+              <label className="w-full flex items-center justify-center gap-2 p-3 border-2 border-dashed border-indigo-300 rounded-xl cursor-pointer hover:bg-indigo-50 transition group">
+                <UploadCloud className="text-indigo-600" />
+                <span className="text-indigo-600 font-medium group-hover:underline">Subir imagen</span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageChange}
+                />
+              </label>
+              <span className="text-xs text-gray-400 mt-1">
+                Formatos permitidos: JPG, PNG. Tamaño máximo recomendado: 2MB.
+              </span>
+            </div>
 
             <div className="flex justify-center mt-6">
               <button
@@ -234,13 +268,13 @@ const RoomCreateModal = ({ isOpen, onClose }) => {
             </div>
           </form>
           {/* Imagen a la derecha en desktop, abajo en mobile */}
-          <div className="flex flex-col items-center content-end mt-15 order-1 md:order-2 w-40">
+          <div className="flex flex-col items-center order-1 md:order-2">
             {preview && (
               <div className="flex flex-col items-center mb-2">
                 <img
                   src={preview}
                   alt="Vista previa"
-                  className="max-w-xs w-full h-28 object-cover rounded-xl border border-gray-300 shadow mb-2"
+                  className="max-w-xs w-full h-48 object-cover rounded-xl border border-gray-300 shadow mb-2"
                 />
                 <button
                   type="button"
@@ -248,7 +282,7 @@ const RoomCreateModal = ({ isOpen, onClose }) => {
                     setPreview(null);
                     setForm((prev) => ({ ...prev, img: null }));
                   }}
-                  className="text-xs text-pink-600 hover:underline mb-2 f"
+                  className="text-xs text-pink-600 hover:underline mb-2"
                 >
                   Quitar imagen
                 </button>
