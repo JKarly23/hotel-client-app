@@ -19,11 +19,11 @@ const BookingUserCancelled = ({ booking, setIsModalOpen }) => {
         try {
             setLoading(true);
             console.log(booking);
-            const resp = await bookingService.update(booking.id, {
+            const data = await bookingService.update(booking.id, {
                 status: 'cancelled',
             });
-            if (resp) {
-                dispatch(updateBooking(resp.data));
+            if (data) {
+                dispatch(updateBooking(data));
                 setShowSuccess(true);
                 setTimeout(() => {
                     setShowSuccess(false);

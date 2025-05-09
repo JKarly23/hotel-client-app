@@ -4,6 +4,7 @@ import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import UserNav from './UserNav'
+import icon from '../../assets/hotel-icon-symbol-sign-vector.jpg'
 
 const Navbar = () => {
     const navigation = [
@@ -25,7 +26,7 @@ const Navbar = () => {
                         <span className="sr-only">LuxerGTk</span>
                         <img
                             alt="Logo"
-                            src="../asesst/hotel-icon-symbol-sign-vector.jpg"
+                            src={icon}
                             className="h-12 w-auto rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                         />
                     </Link>
@@ -79,7 +80,7 @@ const Navbar = () => {
                             <span className="sr-only">LuxerGTk</span>
                             <img
                             alt="Logo"
-                            src=".../asesst/hotel-icon-symbol-sign-vector.jpg"
+                            src={icon}
                             className="h-12 w-auto rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                         />
                         </Link>

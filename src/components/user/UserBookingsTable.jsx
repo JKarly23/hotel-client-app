@@ -29,6 +29,11 @@ const UserBookingsTable = ({ bookings, onCancel, back }) => {
     const handlePrev = () => currentPage > 1 && setCurrentPage(p => p - 1);
     const handleNext = () => currentPage < totalPages && setCurrentPage(p => p + 1);
 
+    const handleDelete = (booking) => {
+        setSelected(booking);
+        setIsModalOpen(true);
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -107,7 +112,7 @@ const UserBookingsTable = ({ bookings, onCancel, back }) => {
                                                 <button
                                                     title="Cancelar reserva"
                                                     className="text-red-600 hover:text-red-800 transition-colors duration-200"
-                                                    onClick={() => setIsModalOpen(true)}
+                                                    onClick={() => handleDelete(booking)}
                                                 >
                                                     <Trash2 className="w-5 h-5" />
                                                 </button>
@@ -157,7 +162,7 @@ const UserBookingsTable = ({ bookings, onCancel, back }) => {
                 <DetailBookingUser selected={selected} setSelected={setSelected} />
             )}
             {isModalOpen && (
-                <BookingUserCancelled boking={selected} setIsModalOpen={setIsModalOpen} />
+                <BookingUserCancelled booking={selected} setIsModalOpen={setIsModalOpen} />
             )}
         </motion.div>
     );

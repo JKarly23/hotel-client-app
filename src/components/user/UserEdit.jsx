@@ -6,7 +6,7 @@ import { fileUpload } from "../../helpers/fileUpload";
 import { handleApiError } from "../../utils/handleApiError";
 import Loader from "../ui/Loader";
 import ErrorMessage from "../ui/ErrorMessage";
-import { updateUser } from "../../feautere/auth/authSlice";
+import { setUser, updateUser,  } from "../../feautere/auth/authSlice";
 import { UploadCloud } from "lucide-react";
 
 const userService = new AuthService();
@@ -65,6 +65,7 @@ const UserEdit = () => {
         try {
             const updatedUser = await userService.update(user.id, { ...form, img: secureUrl ? secureUrl : user.img });
             dispatch(updateUser(updatedUser));
+            dispatch(setUser(updatedUser));
             navigate("/profile");
         } catch (err) {
             setError(handleApiError(err));

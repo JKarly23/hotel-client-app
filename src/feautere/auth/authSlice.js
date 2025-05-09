@@ -35,6 +35,12 @@ export const authSlice = createSlice({
         ? action.payload
         : user);
     },
+    updateUserBookings: (state, action) => {
+      state.user.bookings = state.user.bookings.map(booking =>
+        booking.id === action.payload.id ? action.payload : booking
+      );
+      localStorage.setItem('user', JSON.stringify(state.user));
+    },
     deleteUser: (state, action) => {
       state.users = state.users.filter((user) => user.id !== action.payload);
     },
