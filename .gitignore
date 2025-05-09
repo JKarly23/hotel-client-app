@@ -26,4 +26,4 @@ dist-ssr
 public/img/*
 
 .env
-assets/img/*
+assets/*

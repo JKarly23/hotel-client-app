@@ -25,7 +25,7 @@ const Navbar = () => {
                         <span className="sr-only">LuxerGTk</span>
                         <img
                             alt="Logo"
-                            src="../../../public/hotel-icon-symbol-sign-vector.jpg"
+                            src="../asesst/hotel-icon-symbol-sign-vector.jpg"
                             className="h-12 w-auto rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                         />
                     </Link>
@@ -79,7 +79,7 @@ const Navbar = () => {
                             <span className="sr-only">LuxerGTk</span>
                             <img
                             alt="Logo"
-                            src="../../../public/hotel-icon-symbol-sign-vector.jpg"
+                            src=".../asesst/hotel-icon-symbol-sign-vector.jpg"
                             className="h-12 w-auto rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
                         />
                         </Link>
