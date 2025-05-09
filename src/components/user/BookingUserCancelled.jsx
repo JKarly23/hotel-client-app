@@ -9,16 +9,17 @@ import ErrorMessage from '../ui/ErrorMessage';
 
 const bookingService = new BookingService();
 
-const BookingUserCancelled = ({ boking, setIsModalOpen }) => {
+const BookingUserCancelled = ({ booking, setIsModalOpen }) => {
     const [showSuccess, setShowSuccess] = useState(false);
     const [loading, setLoading] = useState(false);
-    cosnt[error, setError] = useState(null);
+    const[error, setError] = useState(null);
     const dispatch = useDispatch();
 
     const handleCancelBooking = async () => {
         try {
             setLoading(true);
-            const resp = await bookingService.update(boking.id, {
+            console.log(booking);
+            const resp = await bookingService.update(booking.id, {
                 status: 'cancelled',
             });
             if (resp) {

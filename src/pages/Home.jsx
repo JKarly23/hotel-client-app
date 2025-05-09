@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { RoomService } from '../services/RoomService';
 import { useRef } from 'react';
 import { motion } from "framer-motion";
-import heroImage from '../../public/img/hero1.jpg';
-import hotel from '../../public/img/hero.png';
-import service1 from '../../public/img/service1.jpg';
-import service2 from '../../public/img/service2.jpg';
-import service3 from '../../public/img/service3.jpg';
-import service4 from '../../public/img/service4.jpg';
-import service5 from '../../public/img/service5.jpg';
-import service6 from '../../public/img/service6.jpg';
-import service7 from '../../public/img/service7.jpg';
+import heroImage from '../assets/img/hero1.jpg'
+import hotel from '../assets/img/hero.png';
+import service1 from '../assets/img/service1.jpg';
+import service2 from '../assets/img/service2.jpg';
+import service3 from '../assets/img/service3.jpg';
+import service4 from '../assets/img/service4.jpg';
+import service5 from '../assets/img/service5.jpg';
+import service6 from '../assets/img/service6.jpg';
+import service7 from '../assets/img/service7.jpg';
 import Footer from '../components/ui/Footer';
 
 const roomService = new RoomService();
