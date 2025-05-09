@@ -19,6 +19,7 @@ import ErrorMessage from '../ui/ErrorMessage'
 import { handleApiError } from '../../utils/handleApiError'
 import QRDownload from './QRDownload'
 import { BookingService } from '../../services/BookingService';
+import { addUserBookings } from '../../feautere/auth/authSlice'
 
 
 const paymentMethods = [
@@ -75,6 +76,7 @@ const Booking = () => {
             if (data) {
                 console.log(data);
                 setBookingData(data);
+                addUserBookings(data);
             }
         } catch (err) {
             console.error(err.message);

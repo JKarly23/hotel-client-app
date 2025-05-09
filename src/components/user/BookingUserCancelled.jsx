@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux';
 import { updateBooking } from '../../feautere/booking/bookingsSlice';
 import Loader from '../ui/Loader';
 import ErrorMessage from '../ui/ErrorMessage';
+import { updateUserBookings } from '../../feautere/auth/authSlice';
 
 const bookingService = new BookingService();
 
@@ -24,6 +25,7 @@ const BookingUserCancelled = ({ booking, setIsModalOpen }) => {
             });
             if (data) {
                 dispatch(updateBooking(data));
+                dispatch(updateUserBookings(booking));
                 setShowSuccess(true);
                 setTimeout(() => {
                     setShowSuccess(false);

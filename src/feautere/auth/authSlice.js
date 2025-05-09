@@ -37,7 +37,7 @@ export const authSlice = createSlice({
     },
     updateUserBookings: (state, action) => {
       state.user.bookings = state.user.bookings.map(booking =>
-        booking.id === action.payload.id ? action.payload : booking
+        booking.id === action.payload ? action.payload : booking
       );
       localStorage.setItem('user', JSON.stringify(state.user));
     },
@@ -49,9 +49,15 @@ export const authSlice = createSlice({
     },
     setUsers(state, action) {
       state.users = action.payload;
-    }
+    },
+    addUserBookings: (state, action) => {
+      state.user.bookings = [...state.user.bookings, action.payload];
+      console.log('Bookings: ' + state.user.bookings);
+      localStorage.setItem('user', JSON.stringify(state.user));
+    },
   },
+
 });
 
-export const { setUser, logout, updateUser, addUser, deleteUser, setUsers } = authSlice.actions;
+export const { setUser, logout, updateUser, addUser, deleteUser, setUsers, updateUserBookings, addUserBookings } = authSlice.actions;
 export default authSlice.reducer;
