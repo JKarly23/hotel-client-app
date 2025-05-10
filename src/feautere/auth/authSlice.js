@@ -37,7 +37,7 @@ export const authSlice = createSlice({
     },
     updateUserBookings: (state, action) => {
       state.user.bookings = state.user.bookings.map(booking =>
-        booking.id === action.payload ? action.payload : booking
+        booking.id === action.payload.id ? action.payload : booking
       );
       localStorage.setItem('user', JSON.stringify(state.user));
     },
@@ -52,7 +52,8 @@ export const authSlice = createSlice({
     },
     addUserBookings: (state, action) => {
       state.user.bookings = [...state.user.bookings, action.payload];
-      console.log('Bookings: ' + state.user.bookings);
+      console.log('Bookings creat: ' + JSON.stringify(state.user.bookings));
+      console.log('Payload creat: ' + JSON.stringify(action.payload));
       localStorage.setItem('user', JSON.stringify(state.user));
     },
   },

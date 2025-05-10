@@ -7,10 +7,11 @@ import BookingUserCancelled from "./BookingUserCancelled";
 
 const ITEMS_PER_PAGE = 5;
 
-const UserBookingsTable = ({ bookings, onCancel, back }) => {
+const UserBookingsTable = ({ bookings, back }) => {
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [selected, setSelected] = useState(null);
+    const [booking, setBooking] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const filteredBookings = useMemo(() => {
@@ -30,7 +31,7 @@ const UserBookingsTable = ({ bookings, onCancel, back }) => {
     const handleNext = () => currentPage < totalPages && setCurrentPage(p => p + 1);
 
     const handleDelete = (booking) => {
-        setSelected(booking);
+        setBooking(booking);
         setIsModalOpen(true);
     };
 
@@ -162,7 +163,7 @@ const UserBookingsTable = ({ bookings, onCancel, back }) => {
                 <DetailBookingUser selected={selected} setSelected={setSelected} />
             )}
             {isModalOpen && (
-                <BookingUserCancelled booking={selected} setIsModalOpen={setIsModalOpen} />
+                <BookingUserCancelled booking={booking} setIsModalOpen={setIsModalOpen} />
             )}
         </motion.div>
     );

@@ -70,7 +70,9 @@ const BookingTable = () => {
         b.room?.number?.toString().includes(s) ||
         b.user?.name?.toLowerCase().includes(s) ||
         b.status?.toLowerCase().includes(s) ||
-        b.paymentStatus?.toLowerCase().includes(s)
+        b.paymentStatus?.toLowerCase().includes(s||
+        new Date(b.checkInDate).toLocaleDateString().toLowerCase().includes(s) ||
+        new Date(b.checkOutDate).toLocaleDateString().toLowerCase().includes(s))
     );
   }, [bookings, search]);
 
@@ -172,15 +174,17 @@ const BookingTable = () => {
                   <td className="px-4 py-3 text-gray-400">{(page - 1) * PAGE_SIZE + idx + 1}</td>
                   <td className="px-4 py-3 font-bold text-indigo-600">{b.room.number}</td>
                   <td className="px-4 py-3 flex items-center gap-2">
-                    <img src={b.user.img} alt={b.user.name} className="w-8 h-8 rounded-full object-cover border-2 border-indigo-300" />
+                    <img src={b.img ? b.img :
+                      'https://tse4.mm.bing.net/th/id/OIP.FkQDxKdriMvRdcRm9X7ZFAHaHX?cb=iwp1&rs=1&pid=ImgDetMain'
+                    } alt={b.user.name} className="w-8 h-8 rounded-full object-cover border-2 border-indigo-300" />
                     <span className="font-medium text-gray-700">{b.user.name}</span>
                   </td>
-                  <td className="px-4 py-3 text-gray-600">{new Date(b.checkInDate).toLocaleDateString()}</td>
-                  <td className="px-4 py-3 text-gray-600">{new Date(b.checkOutDate).toLocaleDateString()}</td>
-                  <td className="px-4 py-3 text-indigo-700 font-semibold">${b.totalPrice}</td>
+                  <td className="px-4 py-3 text-gray-600">{b.checkInDate ? new Date(b.checkInDate).toLocaleDateString() :'  ----'}</td>
+                  <td className="px-4 py-3 text-gray-600">{b.checkInDate ? new Date(b.checkOutDate).toLocaleDateString(): '  ----'}</td>
+                  <td className="px-4 py-3 text-indigo-700 font-semibold">${b.totalPrice ? b.totalPrice : '---'}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-1 rounded-full text-xs font-bold ${statusColors[b.paymentStatus] || "bg-gray-100 text-gray-700"}`}>
-                      {b.paymentStatus === "pending" ? "Pendiente" : b.paymentStatus === "paid" ? "Pagado" : "Cancelado"}
+                      {b.paymentStatus ? b.paymentStatus === "pending" ? "Pendiente" : b.paymentStatus === "paid" ? "Pagado" : "Cancelado" : '----'}
                     </span>
                   </td>
                   <td className="px-4 py-3">
@@ -189,40 +193,40 @@ const BookingTable = () => {
                     </span>
                   </td>
                   <td className="px-4 py-3 flex gap-2">
-                  <button
-                    onClick={() => openModal("detail", b)}
-                    className="p-2 rounded-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 transition"
-                    title="Ver detalles"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="3" />
-                      <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  </button>
-                  {user.role === 'admin' && (
-                    <>
-                      <button
-                        onClick={() => openModal("edit", b)}
-                        className="p-2 rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 transition"
-                        title="Editar"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path d="M15.232 5.232l3.536 3.536M9 13l6-6 3 3-6 6H9v-3z" />
-                        </svg>
-                      </button>
-                      <button
-                        onClick={() => openModal("delete", b)}
-                        className="p-2 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 transition"
-                        title="Eliminar"
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 7V5a2 2 0 00-2-2H7a2 2 0 00-2 2v2" />
-                        </svg>
-                      </button>
-                    </>
-                  )
-                  }
-                </td>
+                    <button
+                      onClick={() => openModal("detail", b)}
+                      className="p-2 rounded-full bg-emerald-100 hover:bg-emerald-200 text-emerald-700 transition"
+                      title="Ver detalles"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                      </svg>
+                    </button>
+                    {user.role === 'admin' && (
+                      <>
+                        <button
+                          onClick={() => openModal("edit", b)}
+                          className="p-2 rounded-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 transition"
+                          title="Editar"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M15.232 5.232l3.536 3.536M9 13l6-6 3 3-6 6H9v-3z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => openModal("delete", b)}
+                          className="p-2 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 transition"
+                          title="Eliminar"
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path d="M6 19a2 2 0 002 2h8a2 2 0 002-2V7H6v12zM19 7V5a2 2 0 00-2-2H7a2 2 0 00-2 2v2" />
+                          </svg>
+                        </button>
+                      </>
+                    )
+                    }
+                  </td>
                 </tr>
               ))}
             </tbody>

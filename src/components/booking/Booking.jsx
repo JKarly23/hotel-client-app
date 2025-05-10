@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -46,8 +46,8 @@ const Booking = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [bookingData, setBookingData] = useState({});
+    const dispatch = useDispatch();
 
-    console.log(value)
 
     useEffect(() => {
         setRoom(selectedRoom);
@@ -74,9 +74,8 @@ const Booking = () => {
                 roomId: room.id
             });
             if (data) {
-                console.log(data);
                 setBookingData(data);
-                addUserBookings(data);
+                dispatch(addUserBookings(data));
             }
         } catch (err) {
             console.error(err.message);

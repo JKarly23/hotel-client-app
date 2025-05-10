@@ -25,12 +25,11 @@ const BookingUserCancelled = ({ booking, setIsModalOpen }) => {
             });
             if (data) {
                 dispatch(updateBooking(data));
-                dispatch(updateUserBookings(booking));
+                dispatch(updateUserBookings(data));
                 setShowSuccess(true);
                 setTimeout(() => {
                     setShowSuccess(false);
                     setIsModalOpen(false);
-                    setShowBooking(false);
                 }, 2000);
             }
         } catch (err) {
