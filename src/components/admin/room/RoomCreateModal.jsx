@@ -4,10 +4,10 @@ import { UploadCloud, X } from "lucide-react";
 import { RoomService } from "../../../services/RoomService";
 import { fileUpload } from "../../../helpers/fileUpload";
 import { useDispatch } from "react-redux";
-import { setUser } from "../../../feautere/auth/authSlice";
 import { handleApiError } from "../../../utils/handleApiError";
 import Loader from "../../ui/Loader";
 import ErrorMessage from "../../ui/ErrorMessage";
+import { addRoom } from "../../../feautere/room/roomSlice";
 
 const roomService = new RoomService();
 
@@ -75,7 +75,7 @@ const RoomCreateModal = ({ isOpen, onClose }) => {
       console.log(room)
       const data = await roomService.create(room);
       if (data) {
-        dispatch(setUser(data));
+        dispatch(addRoom(data));
       }
     } catch (err) {
       setError(handleApiError(err));
@@ -223,41 +223,7 @@ const RoomCreateModal = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            <div className="flex flex-col items-center">
-              {preview && (
-                <div className="w-full flex flex-col items-center mb-2">
-                  <img
-                    src={preview}
-                    alt="Vista previa"
-                    className="max-w-xs w-full h-48 object-cover rounded-xl border border-gray-300 shadow mb-2"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setPreview(null);
-                      setForm((prev) => ({ ...prev, img: null }));
-                    }}
-                    className="text-xs text-pink-600 hover:underline mb-2"
-                  >
-                    Quitar imagen
-                  </button>
-                </div>
-              )}
-              <label className="w-full flex items-center justify-center gap-2 p-3 border-2 border-dashed border-indigo-300 rounded-xl cursor-pointer hover:bg-indigo-50 transition group">
-                <UploadCloud className="text-indigo-600" />
-                <span className="text-indigo-600 font-medium group-hover:underline">Subir imagen</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleImageChange}
-                />
-              </label>
-              <span className="text-xs text-gray-400 mt-1">
-                Formatos permitidos: JPG, PNG. Tamaño máximo recomendado: 2MB.
-              </span>
-            </div>
-
+            
             <div className="flex justify-center mt-6">
               <button
                 type="submit"
