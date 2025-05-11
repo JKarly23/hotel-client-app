@@ -91,7 +91,7 @@ const Booking = () => {
 
 
     return (
-        <div className="min-h-screen from-indigo-100 via-purple-100 to-pink-100 flex items-center justify-center px-4 py-10 animate__animated animate__fadeIn">
+        <div className="mt-15 min-h-screen from-indigo-100 via-purple-100 to-pink-100 flex items-center justify-center px-4 py-10 animate__animated animate__fadeIn">
             <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 overflow-hidden border border-indigo-100">
 
                 {/* Imagen solo en desktop */}

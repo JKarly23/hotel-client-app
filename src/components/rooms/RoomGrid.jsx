@@ -4,24 +4,24 @@ import { useLocation, Link } from 'react-router-dom';
 const RoomGrid = ({ room }) => {
   return (
     <div
-      className="group relative bg-white rounded-xl border border-gray-200 shadow-md hover:shadow-xl transition-shadow duration-300 p-4 flex flex-col h-[420px] animate__animated animate__fadeIn"
+      className="group relative bg-white rounded-xl border border-gray-200 shadow-md hover:shadow-xl transition-shadow duration-300 p-3 sm:p-4 flex flex-col h-full animate__animated animate__fadeIn"
     >
       <div>
         <a href={room.img} target="_blank" rel="noopener noreferrer">
           <img
             alt={`Imagen de la habitación ${room.number}`}
             src={room.img}
-            className="aspect-square w-full rounded-lg bg-gray-100 object-cover group-hover:opacity-90 lg:aspect-auto lg:h-64 mb-4"
+            className="w-full aspect-square sm:h-64 object-cover rounded-lg bg-gray-100 group-hover:opacity-90 mb-3"
           />
         </a>
       </div>
 
-      <div className="flex-1 flex flex-col justify-between">
+      <div className="flex-1 flex flex-col justify-between gap-2">
         <div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-800 mb-1 sm:mb-2">
             Habitación No. {room.number}
           </h3>
-          <p className="text-sm text-gray-500 mb-3">
+          <p className="text-sm text-gray-500">
             <span className="font-medium">Capacidad:</span> {room.capacity}
           </p>
         </div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { RoomService } from '../services/RoomService';
 import { useRef } from 'react';
 import { motion } from "framer-motion";
@@ -212,12 +213,12 @@ const Home = () => {
                     <p className="text-gray-500 mb-2 line-clamp-3">{room.description}</p>
                     <div className="flex justify-between items-center mt-4">
                       <span className="text-indigo-600 font-extrabold text-lg">${room.price}/noche</span>
-                      <a
-                        href={`/room/${room.id}`}
+                      <Link
+                        to={`/room/${room.id}`}
                         className="inline-block rounded-full bg-indigo-50 text-indigo-700 px-4 py-2 text-sm font-semibold hover:bg-indigo-600  hover:text-white transition"
                       >
                         Ver detalles →
-                      </a>
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -225,12 +226,12 @@ const Home = () => {
             </div>
           </div>
           <div className="text-center mt-12">
-            <a
-              href="/rooms"
+            <Link
+              to="/rooms"
               className="inline-block bg-indigo-600 text-white px-8 py-3 rounded-full shadow-lg hover:bg-indigo-500 transition font-semibold text-lg"
             >
               Ver todas las habitaciones
-            </a>
+            </Link>
           </div>
         </div>
       </section>

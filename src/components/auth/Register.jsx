@@ -16,7 +16,7 @@ import ErrorMessage from '../ui/ErrorMessage';
 const authService = new AuthService();
 
 const Register = () => {
-  const initialValue = { email: '', password: '' }
+  const initialValue = { name: '', email: '', password: '' }
   const [value, handleInputChange] = useForm(initialValue)
   const { email, password, name } = value
   const [loading, setLoading] = useState(false);
@@ -35,6 +35,7 @@ const Register = () => {
         try {
           setLoading(true);
           const user = await authService.register({ email, password, name });
+          console.log(user);
           if (!user) throw new Error('Ha ocurrido un error en el registro', { cause: 'bad_request' });
           localStorage.setItem('token', user.token);
           dispatch(setUser(user));

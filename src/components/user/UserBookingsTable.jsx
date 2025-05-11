@@ -16,7 +16,7 @@ const UserBookingsTable = ({ bookings, back }) => {
 
     const filteredBookings = useMemo(() => {
         return bookings.filter((b) =>
-            b.room?.number?.toString().toLowerCase().includes(search.toLowerCase()) || 
+            b.room?.number?.toString().toLowerCase().includes(search.toLowerCase()) ||
             b.status?.toLowerCase().includes(search.toLowerCase())
         );
     }, [bookings, search]);
@@ -61,7 +61,7 @@ const UserBookingsTable = ({ bookings, back }) => {
                 </div>
             </div>
 
-            <div className="rounded-2xl overflow-hidden border border-indigo-100">
+            <div className="hidden sm:block rounded-2xl overflow-hidden border border-indigo-100">
                 <table className="min-w-full text-sm text-gray-700">
                     <thead>
                         <tr className="bg-gradient-to-r from-indigo-500 to-purple-500 text-white">
@@ -83,20 +83,17 @@ const UserBookingsTable = ({ bookings, back }) => {
                         ) : (
                             paginated.map((booking, index) => (
                                 <tr key={booking.id} className="border-b border-indigo-50 hover:bg-indigo-50/30 transition-colors duration-200">
-                                    <td className="py-4 px-6 font-medium">
-                                        {(currentPage - 1) * ITEMS_PER_PAGE + index + 1}
-                                    </td>
+                                    <td className="py-4 px-6 font-medium">{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
                                     <td className="py-4 px-6">{booking.room?.number || "N/A"}</td>
                                     <td className="py-4 px-6">{format(new Date(booking.checkInDate), "dd/MM/yyyy")}</td>
                                     <td className="py-4 px-6">{format(new Date(booking.checkOutDate), "dd/MM/yyyy")}</td>
                                     <td className="py-4 px-6">
-                                        <span className={`px-4 py-1.5 rounded-full text-xs font-semibold ${
-                                            booking.status === "CANCELLED"
+                                        <span className={`px-4 py-1.5 rounded-full text-xs font-semibold ${booking.status === "CANCELLED"
                                                 ? "bg-red-100 text-red-600"
                                                 : booking.status === "COMPLETED"
                                                     ? "bg-green-100 text-green-600"
                                                     : "bg-yellow-100 text-yellow-700"
-                                        }`}>
+                                            }`}>
                                             {booking.status}
                                         </span>
                                     </td>
@@ -127,35 +124,47 @@ const UserBookingsTable = ({ bookings, back }) => {
                 </table>
             </div>
 
-            <div className="mt-6 flex flex-col sm:flex-row justify-between items-center gap-4">
-                <button
-                    onClick={() => back(false)}
-                    className="flex items-center gap-2 px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
-                >
-                    <ChevronLeft className="w-4 h-4" />
-                    Volver al perfil
-                </button>
-
-                {totalPages > 1 && (
-                    <div className="flex items-center gap-4">
-                        <button
-                            onClick={handlePrev}
-                            disabled={currentPage === 1}
-                            className="p-2.5 bg-white border-2 border-indigo-200 hover:border-indigo-400 rounded-full disabled:opacity-50 disabled:hover:border-indigo-200 transition-all duration-200"
-                        >
-                            <ChevronLeft className="w-5 h-5 text-indigo-600" />
-                        </button>
-                        <span className="px-4 py-2 text-sm font-medium text-indigo-700">
-                            Página {currentPage} de {totalPages}
-                        </span>
-                        <button
-                            onClick={handleNext}
-                            disabled={currentPage === totalPages}
-                            className="p-2.5 bg-white border-2 border-indigo-200 hover:border-indigo-400 rounded-full disabled:opacity-50 disabled:hover:border-indigo-200 transition-all duration-200"
-                        >
-                            <ChevronRight className="w-5 h-5 text-indigo-600" />
-                        </button>
-                    </div>
+            {/* Layout tipo tarjeta para móviles */}
+            <div className="sm:hidden space-y-4">
+                {paginated.length === 0 ? (
+                    <p className="text-center text-gray-500 bg-gray-50 py-6 rounded-xl border">No se encontraron reservas.</p>
+                ) : (
+                    paginated.map((booking, index) => (
+                        <div key={booking.id} className="bg-white rounded-xl border border-indigo-100 shadow p-4">
+                            <div className="flex justify-between items-center mb-2">
+                                <h3 className="text-sm font-semibold text-indigo-600">Reserva #{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</h3>
+                                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${booking.status === "CANCELLED"
+                                        ? "bg-red-100 text-red-600"
+                                        : booking.status === "COMPLETED"
+                                            ? "bg-green-100 text-green-600"
+                                            : "bg-yellow-100 text-yellow-700"
+                                    }`}>
+                                    {booking.status}
+                                </span>
+                            </div>
+                            <p className="text-sm text-gray-700"><strong>Habitación:</strong> {booking.room?.number || "N/A"}</p>
+                            <p className="text-sm text-gray-700"><strong>Check-In:</strong> {format(new Date(booking.checkInDate), "dd/MM/yyyy")}</p>
+                            <p className="text-sm text-gray-700"><strong>Check-Out:</strong> {format(new Date(booking.checkOutDate), "dd/MM/yyyy")}</p>
+                            <div className="flex gap-4 mt-4">
+                                <button
+                                    title="Ver detalles"
+                                    className="text-indigo-600 hover:text-indigo-800 transition-colors duration-200"
+                                    onClick={() => setSelected(booking)}
+                                >
+                                    <Eye className="w-5 h-5" />
+                                </button>
+                                {booking.status !== "CANCELLED" && (
+                                    <button
+                                        title="Cancelar reserva"
+                                        className="text-red-600 hover:text-red-800 transition-colors duration-200"
+                                        onClick={() => handleDelete(booking)}
+                                    >
+                                        <Trash2 className="w-5 h-5" />
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    ))
                 )}
             </div>
 

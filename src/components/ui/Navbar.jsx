@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Dialog, DialogPanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import { Link } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import UserNav from './UserNav'
 import icon from '../../assets/hotel-icon-symbol-sign-vector.jpg'
@@ -11,6 +11,7 @@ const Navbar = () => {
         { name: 'Inicio', href: '/' },
         { name: 'Habitaciones', href: '/rooms' },
         { name: 'Contacto', href: '/contact' },
+        { name: 'Admin Dashboard', href: '/admin' },
     ]
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
     const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -43,15 +44,23 @@ const Navbar = () => {
                 </div>
                 <div className="hidden lg:flex lg:gap-x-12">
                     {navigation.map((item) => (
-                        <Link key={item.name} to={item.href} className="text-sm/6 font-semibold text-gray-900">
-                            {item.name}
-                        </Link>
+                        (user.role === 'admin' || user.role === 'recepcionist') && item.href === '/admin' ? (
+                            <NavLink key={item.name} to={item.href} className="text-sm/6 font-semibold text-gray-900">
+                                {item.name}
+                            </NavLink>
+                        ) : (
+                            user.role !== 'admin' && user.role !== 'recepcionist' && item.href === '/admin' ? null : (
+                                <NavLink key={item.name} to={item.href} className="text-sm/6 font-semibold text-gray-900">
+                                    {item.name}
+                                </NavLink>
+                            )
+                        )
                     ))}
                 </div>
                 <div className="hidden lg:flex lg:flex-1 lg:justify-end">
                     {!isAuthenticated ? (
-                        <Link 
-                            to="/auth/login" 
+                        <Link
+                            to="/auth/login"
                             className="inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-blue-500 to-indigo-600 rounded-md shadow-sm hover:from-blue-600 hover:to-indigo-700 transition-all duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
                         >
                             Iniciar sesión
@@ -79,10 +88,10 @@ const Navbar = () => {
                         <Link to="/" className="-m-1.5 p-1.5">
                             <span className="sr-only">LuxerGTk</span>
                             <img
-                            alt="Logo"
-                            src={icon}
-                            className="h-12 w-auto rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
-                        />
+                                alt="Logo"
+                                src={icon}
+                                className="h-12 w-auto rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105"
+                            />
                         </Link>
                         <button
                             type="button"
@@ -97,15 +106,27 @@ const Navbar = () => {
                         <div className="-my-6 divide-y divide-gray-500/10">
                             <div className="space-y-2 py-6">
                                 {navigation.map((item) => (
-                                    <Link
+                                    user.role === 'admin' || user.role === 'recepcionist') && item.href === '/admin' ?
+                                    (<Link
                                         key={item.name}
                                         to={item.href}
                                         className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                                         onClick={() => setMobileMenuOpen(false)}
                                     >
                                         {item.name}
-                                    </Link>
-                                ))}
+                                    </Link>) : (
+                                        user.role !== 'admin' && user.role !== 'recepcionist' && item.href === '/admin' ? null : (
+                                            <NavLink key={item.name} to={item.href}
+                                                className="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                                                onClick={() => setMobileMenuOpen(false)}
+                                            >
+                                                {item.name}
+
+                                            </NavLink>
+                                        )
+
+                                    ))}
+
                             </div>
                             <div className="py-6">
                                 {!isAuthenticated

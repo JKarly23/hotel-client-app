@@ -54,23 +54,20 @@ const Room = () => {
   if (error) return <ErrorMessage error={error} />;
 
   return (
-    <div className="bg-white animated__animated animated__fadeIn absolute inset-x-0">
-      <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-        <div className="flex justify-between items-center mb-6">
+    <div className="bg-white animated__animated animated__fadeIn absolute inset-x-0 mt-30">
+      <div className="mx-auto w-full px-4 py-8 sm:px-6 sm:py-12 lg:max-w-7xl lg:px-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4">
           <h2 className="text-2xl font-bold tracking-tight text-gray-900">Habitaciones</h2>
           <RoomFilter allRooms={allRooms} setRooms={setRoomsState} />
         </div>
 
-        <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+        <div className="grid grid-cols-1 gap-y-6 sm:grid-cols-2 lg:grid-cols-4 gap-x-4">
           {rooms.map((room) => (
             <RoomGrid key={room.id || room._id} room={room} />
           ))}
         </div>
 
-        <Pagination
-          {...pagination}
-          onPageChange={handleNewPage}
-        />
+        <Pagination {...pagination} onPageChange={handleNewPage} />
       </div>
     </div>
   );

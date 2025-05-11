@@ -12,7 +12,7 @@ export const bookingsCancelled = (bookings) => {
 
 export const bookingsActive = (bookings) => {
     const now = new Date();
-    return bookings.filter((booking) => new Date(booking.checkInDate) <= now || new Date(booking.checkOutDate) >= now).length;
+    return bookings.filter((booking) => booking.status !== 'cancelled' && (new Date(booking.checkInDate) <= now || new Date(booking.checkOutDate) >= now)).length;
 }
 
 export const bookingsFutured = (bookings) => {
