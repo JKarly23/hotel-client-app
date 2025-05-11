@@ -13,7 +13,7 @@ const UserBookingsTable = ({ bookings, back }) => {
     const [selected, setSelected] = useState(null);
     const [booking, setBooking] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    const [room, setRoom] = useState(0);
     const filteredBookings = useMemo(() => {
         return bookings.filter((b) =>
             b.room?.number?.toString().toLowerCase().includes(search.toLowerCase()) ||
@@ -82,17 +82,17 @@ const UserBookingsTable = ({ bookings, back }) => {
                             </tr>
                         ) : (
                             paginated.map((booking, index) => (
-                                <tr key={booking.id} className="border-b border-indigo-50 hover:bg-indigo-50/30 transition-colors duration-200">
+                                < tr key={booking.id} className="border-b border-indigo-50 hover:bg-indigo-50/30 transition-colors duration-200" >
                                     <td className="py-4 px-6 font-medium">{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</td>
-                                    <td className="py-4 px-6">{booking.room?.number || "N/A"}</td>
-                                    <td className="py-4 px-6">{format(new Date(booking.checkInDate), "dd/MM/yyyy")}</td>
-                                    <td className="py-4 px-6">{format(new Date(booking.checkOutDate), "dd/MM/yyyy")}</td>
+                                    <td className="py-4 px-6">{booking.room.number}</td>
+                                    <td className="py-4 px-6">{booking.checkInDate ? format(new Date(booking.checkInDate), "dd/MM/yyyy") : '----'}</td>
+                                    <td className="py-4 px-6">{booking.checkOutDate ? format(new Date(booking.checkOutDate), "dd/MM/yyyy") : '----'}</td>
                                     <td className="py-4 px-6">
                                         <span className={`px-4 py-1.5 rounded-full text-xs font-semibold ${booking.status === "CANCELLED"
-                                                ? "bg-red-100 text-red-600"
-                                                : booking.status === "COMPLETED"
-                                                    ? "bg-green-100 text-green-600"
-                                                    : "bg-yellow-100 text-yellow-700"
+                                            ? "bg-red-100 text-red-600"
+                                            : booking.status === "COMPLETED"
+                                                ? "bg-green-100 text-green-600"
+                                                : "bg-yellow-100 text-yellow-700"
                                             }`}>
                                             {booking.status}
                                         </span>
@@ -134,17 +134,17 @@ const UserBookingsTable = ({ bookings, back }) => {
                             <div className="flex justify-between items-center mb-2">
                                 <h3 className="text-sm font-semibold text-indigo-600">Reserva #{(currentPage - 1) * ITEMS_PER_PAGE + index + 1}</h3>
                                 <span className={`px-3 py-1 rounded-full text-xs font-semibold ${booking.status === "CANCELLED"
-                                        ? "bg-red-100 text-red-600"
-                                        : booking.status === "COMPLETED"
-                                            ? "bg-green-100 text-green-600"
-                                            : "bg-yellow-100 text-yellow-700"
+                                    ? "bg-red-100 text-red-600"
+                                    : booking.status === "COMPLETED"
+                                        ? "bg-green-100 text-green-600"
+                                        : "bg-yellow-100 text-yellow-700"
                                     }`}>
                                     {booking.status}
                                 </span>
                             </div>
                             <p className="text-sm text-gray-700"><strong>Habitación:</strong> {booking.room?.number || "N/A"}</p>
-                            <p className="text-sm text-gray-700"><strong>Check-In:</strong> {format(new Date(booking.checkInDate), "dd/MM/yyyy")}</p>
-                            <p className="text-sm text-gray-700"><strong>Check-Out:</strong> {format(new Date(booking.checkOutDate), "dd/MM/yyyy")}</p>
+                            <p className="text-sm text-gray-700"><strong>Check-In:</strong> {booking.checkInDate ? format(new Date(booking.checkInDate), "dd/MM/yyyy") : '----'}</p>
+                            <p className="text-sm text-gray-700"><strong>Check-Out:</strong> {booking.checkOutDate ? format(new Date(booking.checkOutDate), "dd/MM/yyyy") : '----'}</p>
                             <div className="flex gap-4 mt-4">
                                 <button
                                     title="Ver detalles"
@@ -168,13 +168,38 @@ const UserBookingsTable = ({ bookings, back }) => {
                 )}
             </div>
 
-            {selected && (
-                <DetailBookingUser selected={selected} setSelected={setSelected} />
+            {
+                selected && (
+                    <DetailBookingUser selected={selected} setSelected={setSelected} />
+                )
+            }
+            {
+                isModalOpen && (
+                    <BookingUserCancelled booking={booking} setIsModalOpen={setIsModalOpen} />
+                )
+            }
+            {totalPages > 1 && (
+                <div className="flex justify-center items-center gap-4 mt-8">
+                    <button
+                        onClick={handlePrev}
+                        disabled={currentPage === 1}
+                        className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
+                    >
+                        <ChevronLeft className="w-5 h-5" />
+                    </button>
+                    <span className="text-sm text-gray-600">
+                        Página {currentPage} de {totalPages}
+                    </span>
+                    <button
+                        onClick={handleNext}
+                        disabled={currentPage === totalPages}
+                        className="p-2 rounded-full border border-gray-300 hover:bg-gray-100 disabled:opacity-50"
+                    >
+                        <ChevronRight className="w-5 h-5" />
+                    </button>
+                </div>
             )}
-            {isModalOpen && (
-                <BookingUserCancelled booking={booking} setIsModalOpen={setIsModalOpen} />
-            )}
-        </motion.div>
+        </motion.div >
     );
 };
 

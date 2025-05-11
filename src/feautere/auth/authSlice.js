@@ -52,8 +52,6 @@ export const authSlice = createSlice({
     },
     addUserBookings: (state, action) => {
       state.user.bookings = [...state.user.bookings, action.payload];
-      console.log('Bookings creat: ' + JSON.stringify(state.user.bookings));
-      console.log('Payload creat: ' + JSON.stringify(action.payload));
       localStorage.setItem('user', JSON.stringify(state.user));
     },
   },
