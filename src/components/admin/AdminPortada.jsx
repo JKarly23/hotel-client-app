@@ -138,7 +138,7 @@ const AdminPortada = () => {
             ['Reservadas', roomsReserved(rooms)],
             ['Mantenimiento', roomsMaintenance(rooms)],
             ['Prom. ocupación', avgRoomsOccupied(rooms) ? avgRoomsOccupied(rooms) : 0],
-            ['Prom. reservas', avgRoomsReserved(rooms)],
+            ['Prom. reservas', avgRoomsReserved(rooms) ? avgRoomsReserved(rooms) : 0],
             ['Más reservada', `Hab. ${roomsMoreReserved(rooms)}`],
           ]} />
           <SubList title="Por tipo" items={typeCounts} />
