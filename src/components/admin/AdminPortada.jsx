@@ -137,7 +137,7 @@ const AdminPortada = () => {
             ['Ocupadas', roomsOccupied(rooms)],
             ['Reservadas', roomsReserved(rooms)],
             ['Mantenimiento', roomsMaintenance(rooms)],
-            ['Prom. ocupación', avgRoomsOccupied(rooms)],
+            ['Prom. ocupación', avgRoomsOccupied(rooms) ? avgRoomsOccupied(rooms) : 0],
             ['Prom. reservas', avgRoomsReserved(rooms)],
             ['Más reservada', `Hab. ${roomsMoreReserved(rooms)}`],
           ]} />
